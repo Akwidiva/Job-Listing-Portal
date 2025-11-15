@@ -50,13 +50,11 @@ app.post('/register', async (req, res) => {
         res.status(201).json({ message: "User registered successfully!" });
     });
 });
-
-// ------------------- FORGOT PASSWORD (dummy) -------------------
 app.post('/forgot-password', (req, res) => {
     res.json({ message: "Reset link sent (not implemented)" });
 });
 
-// ------------------- SERVER START -------------------
 app.listen(5000, () => {
     console.log("🚀 Server running on http://localhost:5000");
 });
+

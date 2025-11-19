@@ -1,28 +1,136 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const db = require("../config/db"); // Your DB connection
 
-// M2 decides token structure; M3 implements the generator
+// ----------------------------
+// TOKEN GENERATOR (M2 defines structure)
+// ----------------------------
 function generateToken(user) {
   return jwt.sign(
     {
       id: user.id,
       email: user.email,
-      // Add more from M2 token structure here
+      role: user.role, // OPTIONAL (add if in schema)
     },
     process.env.JWT_SECRET,
     { expiresIn: "1h" }
   );
 }
 
-exports.register = async (req, res) => {
-  // Placeholder (actual logic will be done by M1 or M2)
-  res.json({ message: "Register endpoint working" });
-};
-
+// ----------------------------
+// LOGIN CONTROLLER (YOUR MAIN TASK)
+// ----------------------------
 exports.login = async (req, res) => {
-  // Placeholder
-  const token = generateToken({ id: "123", email: "test@example.com" });
-  res.json({ message: "Login successful", token });
+  try {
+    const { email, password } = req.body;
+
+    // 1️⃣ Validate input
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ error: "Email and password are required" });
+    }
+
+    // 2️⃣ Check if user exists
+    const [users] = await db.query("SELECT * FROM users WHERE email = ?", [
+      email,
+    ]);
+
+    if (users.length === 0) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
+    const user = users[0];
+
+    // 3️⃣ Compare hashed passwords
+    const passwordMatch = await bcrypt.compare(password, user.password_hash);
+
+    if (!passwordMatch) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
+    // 4️⃣ Generate JWT
+    const token = generateToken(user);
+
+    // 5️⃣ Respond with user info + token
+    res.json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("LOGIN ERROR:", error);
+    res.status(500).json({ error: "Server error during login" });
+  }
 };
 
+// ----------------------------
+// MEMBER 1 — FULL REGISTRATION LOGIC
+// ----------------------------
+exports.register = async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
+
+    // 1️⃣ Validate input
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        error: "Name, email and password are required",
+      });
+    }
+
+    // 2️⃣ Check if user already exists
+    const [existing] = await db.query(
+      "SELECT id FROM users WHERE email = ?",
+      [email]
+    );
+
+    if (existing.length > 0) {
+      return res.status(409).json({
+        error: "Email already registered",
+      });
+    }
+
+    // 3️⃣ Hash password (M1 defines hashing rules)
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // 4️⃣ Insert new user into DB
+    const [result] = await db.query(
+      "INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?)",
+      [name, email, hashedPassword, role || "user"]
+    );
+
+    // The new user ID
+    const userId = result.insertId;
+
+    // 5️⃣ Optionally generate token after registration
+    const token = generateToken({
+      id: userId,
+      email,
+      role: role || "user",
+    });
+
+    // 6️⃣ Send success response
+    res.status(201).json({
+      message: "User registered successfully",
+      token,
+      user: {
+        id: userId,
+        name,
+        email,
+        role: role || "user",
+      },
+    });
+
+  } catch (error) {
+    console.error("REGISTER ERROR:", error);
+    res.status(500).json({ error: "Server error during registration" });
+  }
+};
+
+// Keep login + token export
 module.exports.generateToken = generateToken;

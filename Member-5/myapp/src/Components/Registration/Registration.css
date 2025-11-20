@@ -1,0 +1,166 @@
+/* PAGE BACKGROUND */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* darker, elegant gradient */
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* MAIN CONTAINER */
+.container {
+  width: 420px;
+  background: #ffffff;
+  padding: 35px 40px;
+  margin: 40px auto;
+  border-radius: 22px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  transition: box-shadow 0.3s ease;
+}
+.container:hover {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+}
+
+/* HEADER TITLE WITH ICON */
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.icon-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1565c0; /* deep blue */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  letter-spacing: 1.2px;
+  user-select: none;
+}
+
+.user-icon {
+  font-size: 30px;
+}
+
+.underline {
+  width: 80px;
+  height: 5px;
+  background: #1565c0;
+  margin: 12px auto 0;
+  border-radius: 3px;
+}
+
+/* LABEL STYLE */
+.label {
+  font-size: 15px;
+  color: #555;
+  font-weight: 700;
+  margin-top: 14px;
+  display: block;
+  letter-spacing: 0.03em;
+}
+
+/* INPUT FIELD BOX */
+.input {
+  width: 100%;
+  height: 48px;
+  background: #e8f0fe;
+  border-radius: 12px;
+  margin: 10px 0 18px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border: 1.5px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.input:hover, .input:focus-within {
+  border-color: #1565c0;
+  background: #d0e2ff;
+}
+
+.input input {
+  background: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 15px;
+  font-weight: 500;
+  color: #222;
+}
+
+/* FIELD ICON */
+.field-icon {
+  margin-right: 12px;
+  font-size: 20px;
+  color: #1565c0;
+}
+
+/* ERROR MESSAGE */
+.error-text {
+  color: #d93025;
+  font-size: 13px;
+  margin-top: -8px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+/* BUTTON */
+.submit-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.submit {
+  background: #1565c0;
+  color: white;
+  border: none;
+  padding: 14px 80px;
+  font-size: 17px;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(21, 101, 192, 0.6);
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.submit:hover {
+  background: #0d3a75;
+  box-shadow: 0 6px 18px rgba(13, 58, 117, 0.8);
+}
+
+/* FORGOT PASSWORD */
+.forgot-password {
+  text-align: center;
+  margin-top: 18px;
+  font-weight: 600;
+}
+
+.forgot-password span {
+  color: #1565c0;
+  font-size: 15px;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.forgot-password span:hover {
+  color: #0d3a75;
+}
+.server-error-box {
+  margin-top: 12px;
+  padding: 10px;
+  background: #ffe6e6;
+  border: 1px solid red;
+  border-radius: 6px;
+  color: red;
+  text-align: center;   /* <-- THIS aligns text below button */
+  font-size: 14px;
+  font-weight: 500;
+}

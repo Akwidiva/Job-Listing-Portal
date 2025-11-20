@@ -3,7 +3,7 @@ import "./ResetPassword.css";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-function ResetPassword() {
+function ResetPasswordForm() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -253,4 +253,4 @@ const styles = {
   },
 };
 
-export default ResetPassword;
+export default ResetPasswordForm;

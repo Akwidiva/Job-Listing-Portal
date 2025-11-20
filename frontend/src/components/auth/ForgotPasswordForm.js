@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-function ForgotPassword() {
+function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
@@ -161,4 +161,4 @@ const styles = {
   },
 };
 
-export default ForgotPassword;
+export default ForgotPasswordForm;

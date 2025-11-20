@@ -2,9 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Fix 1: Correct import names (FP not IP)
-import Registration from './components/auth/Registration/Registration';
-import ForgotPassword from './components/auth/ForgotPassword/FP';
-import ResetPassword from './components/auth/ResetPassword/ResetPassword';
+import Registration from './components/auth/RegisterForm';
+import ForgotPassword from './components/auth/ForgotPasswordForm';
+import ResetPassword from './components/auth/ResetPasswordForm';
 
 function App() {
   return (

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import "./Registration.css";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
@@ -15,46 +15,46 @@ const RegisterForm = () => {
 
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState(""); // ✅ Success text
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({});
     setServerError("");
-    setSuccessMessage("");
+    setSuccessMessage(""); 
   };
 
   const validate = () => {
     let newErrors = {};
 
-    // Name
     if (!formData.name.trim()) newErrors.name = "Name is required";
     else if (!/^[a-zA-Z\s]+$/.test(formData.name.trim())) {
       newErrors.name = "Name must contain only letters and spaces";
     }
-
-    // Email
     if (!formData.email.trim()) newErrors.email = "Email is required";
-    else if (!formData.email.endsWith("@gmail.com"))
-      newErrors.email = "Email must end with @gmail.com";
-
-    // Password
     if (!formData.password) newErrors.password = "Password is required";
+    if (!formData.confirmPassword)
+      newErrors.confirmPassword = "Confirm Password is required";
+
+    if (formData.email && !formData.email.endsWith("@gmail.com")) {
+      newErrors.email = "Email must end with @gmail.com";
+    }
 
     const strongPassword =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     if (formData.password && !strongPassword.test(formData.password)) {
       newErrors.password =
-        "Password must be 8+ chars & include uppercase, lowercase, number, special char";
+        "Password must be 8+ characters and include uppercase, lowercase, number & special character";
     }
 
-    // Confirm Password
-    if (!formData.confirmPassword)
-      newErrors.confirmPassword = "Confirm Password is required";
-    else if (formData.password !== formData.confirmPassword)
+    if (
+      formData.password &&
+      formData.confirmPassword &&
+      formData.password !== formData.confirmPassword
+    ) {
       newErrors.confirmPassword = "Passwords do not match";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -69,24 +69,30 @@ const RegisterForm = () => {
 
     try {
       const payload = {
-        name: formData.name,
+        username: formData.name,
         email: formData.email,
         password: formData.password,
       };
 
       const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        "http://localhost:5001/api/auth/register",
         payload
       );
+
+      console.log("Registration success:", response.data);
 
       setSuccessMessage("Registration Successful! Redirecting to login...");
 
       setTimeout(() => {
         navigate("/login");
       }, 1500);
+
     } catch (error) {
-      if (error.response) setServerError(error.response.data.error);
-      else setServerError("Registration failed. Try again.");
+      if (error.response) {
+        setServerError(error.response.data.error);
+      } else {
+        setServerError("Registration failed. Try again.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -96,13 +102,13 @@ const RegisterForm = () => {
     <div className="container">
       <div className="header">
         <div className="icon-title">
-          <span className="user-icon">👤</span> Join Our Job Portal
+          <span className="user-icon">👤</span>
+          Join Our Job Portal
         </div>
         <div className="underline"></div>
       </div>
 
       <div className="inputs">
-        {/* Name */}
         <label className="label">Name</label>
         <div className="input">
           <span className="field-icon">👤</span>
@@ -114,9 +120,8 @@ const RegisterForm = () => {
             onChange={handleChange}
           />
         </div>
-        {errors.name && <p className="error-text">{errors.name}</p>}
+        {errors.name && <div className="error-text">{errors.name}</div>}
 
-        {/* Email */}
         <label className="label">Email</label>
         <div className="input">
           <span className="field-icon">📧</span>
@@ -128,9 +133,8 @@ const RegisterForm = () => {
             onChange={handleChange}
           />
         </div>
-        {errors.email && <p className="error-text">{errors.email}</p>}
+        {errors.email && <div className="error-text">{errors.email}</div>}
 
-        {/* Password */}
         <label className="label">Password</label>
         <div className="input">
           <span className="field-icon">🔒</span>
@@ -142,9 +146,8 @@ const RegisterForm = () => {
             onChange={handleChange}
           />
         </div>
-        {errors.password && <p className="error-text">{errors.password}</p>}
+        {errors.password && <div className="error-text">{errors.password}</div>}
 
-        {/* Confirm Password */}
         <label className="label">Confirm Password</label>
         <div className="input">
           <span className="field-icon">🔒</span>
@@ -157,14 +160,14 @@ const RegisterForm = () => {
           />
         </div>
         {errors.confirmPassword && (
-          <p className="error-text">{errors.confirmPassword}</p>
+          <div className="error-text">{errors.confirmPassword}</div>
         )}
       </div>
 
       <div
         className="forgot-password"
-        onClick={() => navigate("/FP")}
         style={{ cursor: "pointer", color: "blue" }}
+        onClick={() => navigate("/FP")}
       >
         Forgot Password?
       </div>
@@ -174,14 +177,32 @@ const RegisterForm = () => {
           {isLoading ? "Creating Account..." : "Create Account"}
         </button>
 
+        {/* ❌ ERROR MESSAGE */}
         {serverError && (
-          <p className="error-text" style={{ color: "red" }}>
+          <p
+            style={{
+              color: "red",
+              marginTop: "12px",
+              fontSize: "14px",
+              textAlign: "center",
+            }}
+          >
             {serverError}
           </p>
         )}
 
+        {/* ✅ SUCCESS MESSAGE */}
         {successMessage && (
-          <p style={{ color: "green" }}>{successMessage}</p>
+          <p
+            style={{
+              color: "green",
+              marginTop: "12px",
+              fontSize: "14px",
+              textAlign: "center",
+            }}
+          >
+            {successMessage}
+          </p>
         )}
       </div>
     </div>

@@ -1,0 +1,124 @@
+/* MAIN CONTAINER */
+.gh-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* LEFT SIDE */
+.gh-left {
+  flex: 1;
+  background: linear-gradient(180deg, #0A0F28, #1A2A56);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 30px;
+}
+
+.gh-left h1 {
+  font-size: 40px;
+}
+
+.gh-left p {
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+/* RIGHT SIDE */
+.gh-right {
+  flex: 1;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* BOX */
+.gh-box {
+  width: 380px;
+  padding: 10px 30px;
+}
+
+/* TITLE */
+.form-title {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+/* SOCIAL LOGIN */
+.social-login {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 10px;
+}
+
+.google-btn,
+.apple-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  background: #f6f8fa;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.google-btn img,
+.apple-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+/* DIVIDER */
+.divider-line {
+  text-align: center;
+  margin: 15px 0;
+  border-bottom: 1px solid #ccc;
+  line-height: 0.1em;
+}
+
+.divider-line span {
+  background: #fff;
+  padding: 0 10px;
+}
+
+/* INPUTS */
+.gh-box input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+/* BUTTON */
+.gh-box button {
+  width: 100%;
+  background: #238636;
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+/* LINKS */
+.switch,
+.forgot-link {
+  text-align: center;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.error {
+  color: red;
+}

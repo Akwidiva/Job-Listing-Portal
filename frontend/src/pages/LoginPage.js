@@ -1,10 +1,10 @@
 import React from "react";
-import LoginForm from "../components/Auth/LoginForm";
+import Login from "../components/login/login";
 
 const LoginPage = () => {
   return (
     <div style={{ marginTop: "40px" }}>
-      <LoginForm />
+      <Login />
     </div>
   );
 };

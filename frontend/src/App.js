@@ -1,20 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// Fix 1: Correct import names (FP not IP)
-import RegistrationForm from './components/auth/RegisterForm';
-import ForgotPasswordForm from './components/auth/ForgotPasswordForm';
-import ResetPasswordForm from './components/auth/ResetPasswordForm';
+// Fixed imports to correct paths and names
+import Registration from './components/Registration/Registration';
+import ForgotPassword from './components/ForgotPassword/FP';
+import ResetPassword from './components/ResetPassword/ResetPassword';
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Routes>
-          {/* Fix 2: Use <Route> not <Router> */}
-          <Route path="/" element={<RegistrationForm />} />
-          <Route path="/FP" element={<ForgotPasswordForm />} />
-          <Route path="/reset-password/:token" element={<ResetPasswordForm />} />
+          <Route path="/" element={<Registration />} />
+          <Route path="/FP" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Routes>
       </div>
     </Router>

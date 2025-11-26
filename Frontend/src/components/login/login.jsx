@@ -19,7 +19,7 @@ function Login() {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login`, {
         email,
         password,
       });
@@ -36,10 +36,6 @@ function Login() {
   // GOOGLE BUTTON CLICK -> Redirect to registration or OAuth
   const handleGoogleLogin = () => {
     navigate("/register-google"); // Change this route to whatever you want
-  };
-
-  const handleAppleLogin = () => {
-    navigate("/register-apple"); // Change if needed
   };
 
   return (
@@ -61,13 +57,9 @@ function Login() {
           <div className="social-login">
             <button className="google-btn" onClick={handleGoogleLogin}>
               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="google" />
-              Continue with Google
+              Sign in with Google
             </button>
 
-            <button className="apple-btn" onClick={handleAppleLogin}>
-              <img src="https://cdn-icons-png.flaticon.com/512/0/747.png" alt="apple" />
-              Continue with Apple
-            </button>
           </div>
 
           {/* DIVIDER */}

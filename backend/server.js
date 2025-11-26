@@ -4,6 +4,11 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const session = require('express-session');
+// const AppleStrategy = require('passport-apple');
+const axios = require('axios');
 require('dotenv').config();
 
 const app = express();
@@ -11,6 +16,94 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Session middleware (required for Passport OAuth)
+app.use(session({
+  secret: process.env.JWT_SECRET || 'your_session_secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false } // Set to true in production with HTTPS
+}));
+
+// Passport Google OAuth Configuration
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: `${process.env.BACKEND_URL}/api/auth/google/callback`
+  },
+  async (accessToken, refreshToken, profile, done) => {
+    try {
+      // Check if user already exists
+      let user = await User.findOne({ email: profile.emails[0].value });
+
+      if (user) {
+        // User exists, return user
+        return done(null, user);
+      } else {
+        // Create new user
+        const newUser = new User({
+          username: profile.displayName,
+          email: profile.emails[0].value,
+          password: await bcrypt.hash(Math.random().toString(36), 12), // Random password for OAuth users
+        });
+
+        user = await newUser.save();
+        return done(null, user);
+      }
+    } catch (error) {
+      return done(error, null);
+    }
+  }
+));
+
+// Apple OAuth Strategy - Commented out (requires paid Apple Developer account)
+// passport.use(new AppleStrategy({
+//     clientID: process.env.APPLE_CLIENT_ID,
+//     teamID: process.env.APPLE_TEAM_ID,
+//     keyID: process.env.APPLE_KEY_ID,
+//     privateKey: process.env.APPLE_CLIENT_SECRET,
+//     callbackURL: "http://localhost:5000/api/auth/apple/callback",
+//     scope: ["name", "email"]
+//   },
+//   async (accessToken, refreshToken, profile, done) => {
+//     try {
+//       // Check if user already exists
+//       let user = await User.findOne({ email: profile.email });
+
+//       if (user) {
+//         return done(null, user);
+//       } else {
+//         // Create new user
+//         const newUser = new User({
+//           username: profile.displayName || profile.email.split('@')[0],
+//           email: profile.email,
+//           password: await bcrypt.hash(Math.random().toString(36), 12),
+//         });
+
+//         user = await newUser.save();
+//         return done(null, user);
+//       }
+//     } catch (error) {
+//       return done(error, null);
+//     }
+//   }
+// ));
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
+});
+
+// Initialize Passport
+app.use(passport.initialize());
 
 // MongoDB User Schema
 const userSchema = new mongoose.Schema({
@@ -295,14 +388,66 @@ app.post('/api/auth/logout', (req, res) => {
   res.json({ message: 'Logged out successfully' });
 });
 
+// Google OAuth Routes
+app.get('/api/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+app.get('/api/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+    // Successful authentication, generate JWT and redirect to frontend
+    const token = jwt.sign(
+      { id: req.user._id, email: req.user.email, username: req.user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    // Redirect to login page with token (for consistency with manual signup)
+    res.redirect(`http://localhost:3000/login?token=${token}`);
+  }
+);
+
+// Apple OAuth Routes - Commented out (requires paid Apple Developer account)
+// app.get('/api/auth/apple',
+//   passport.authenticate('apple')
+// );
+
+// app.post('/api/auth/apple/callback',
+//   passport.authenticate('apple', { failureRedirect: '/login' }),
+//   (req, res) => {
+//     // Successful authentication, generate JWT and redirect to frontend
+//     const token = jwt.sign(
+//       { id: req.user._id, email: req.user.email, username: req.user.username },
+//       process.env.JWT_SECRET,
+//       { expiresIn: '1h' }
+//     );
+
+//     // Redirect to frontend with token
+//     res.redirect(`http://localhost:3000/dashboard?token=${token}`);
+//   }
+// );
+
 // MongoDB Connection (skip in test environment)
 if (process.env.NODE_ENV !== 'test') {
+  console.log('🔄 Attempting to connect to MongoDB...');
+  console.log('📍 MongoDB URI:', process.env.MONGODB_URI ? 'Atlas URI configured' : 'Using localhost fallback');
+
   mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/jobportal', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+    socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
   })
   .then(() => console.log('✅ MongoDB connected successfully'))
-  .catch(err => console.log('❌ MongoDB connection error:', err));
+  .catch(err => {
+    console.log('❌ MongoDB connection error:', err.message);
+    console.log('❌ Error code:', err.code);
+    console.log('❌ Error codeName:', err.codeName);
+    if (err.reason) {
+      console.log('❌ Connection reason:', err.reason);
+    }
+  });
 }
 
 const PORT = process.env.PORT || 5000;

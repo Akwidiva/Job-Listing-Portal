@@ -66,7 +66,7 @@ function Registration() {
     setIsLoading(true);
 
     try {
-      await axios.post("http://localhost:5000/api/auth/register", formData);
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/auth/register`, formData);
 
       setSuccessMessage("Account created successfully!");
       setTimeout(() => navigate("/login"), 1500);
@@ -105,13 +105,7 @@ function Registration() {
                 src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg"
                 alt="google"
               />
-              Continue with Google
-            </button>
-
-            {/* ✅ Added navigation */}
-            <button className="apple-btn" onClick={() => navigate("/apple")}>
-              <img src="https://cdn-icons-png.flaticon.com/512/0/747.png" alt="apple" />
-              Continue with Apple
+              Sign up with Google
             </button>
 
             <div className="divider-line">

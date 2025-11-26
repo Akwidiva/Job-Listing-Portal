@@ -32,7 +32,7 @@ function ForgotPassword() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/forgot-password",
+        `http://localhost:5000/api/auth/forgot-password`,
         { email }
       );
 

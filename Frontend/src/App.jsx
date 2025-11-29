@@ -2,15 +2,15 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Fixed imports to correct paths and names
-import Registration from './components/Registration/Registration';
-import ForgotPassword from './components/ForgotPassword/FP';
-import ResetPassword from './components/ResetPassword/ResetPassword';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage';
-import ResetPasswordPage from './pages/ResetPasswordPage';
-import Dashboard from './components/Dashboard/Dashboard';
+import Registration from './pages/Registration';
+import ForgotPassword from './pages/FP';
+import ResetPassword from './pages/ResetPassword';
+import Login from './pages/login';
+import Dashboard from './pages/Jobseekerdashboard';
 import LandingPage from './pages/LandingPage';
+import AuthPage from './pages/auth';
+import Jobseekerprofile from './pages/Jobseekerprofile';
+import ResumeManagement from './pages/resumemanagement';
 
 // Component that redirects to Google OAuth
 function GoogleRedirect() {
@@ -37,18 +37,21 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Registration />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Jobseekerprofile />} />
+          <Route path="/resume" element={<ResumeManagement />} />
           <Route path="/google" element={<GoogleRedirect />} />
           <Route path="/register-google" element={<GoogleRedirect />} />
           {/* Apple routes commented out - requires paid Apple Developer account */}
           {/* <Route path="/apple" element={<AppleRedirect />} /> */}
           {/* <Route path="/register-apple" element={<AppleRedirect />} /> */}
           <Route path="/FP" element={<ForgotPassword />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/reset-password-page" element={<ResetPasswordPage />} />
+          <Route path="/reset-password-page" element={<ResetPassword />} />
         </Routes>
       </div>
     </Router>

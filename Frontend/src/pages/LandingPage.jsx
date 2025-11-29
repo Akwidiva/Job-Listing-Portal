@@ -1,19 +1,12 @@
 import { Search, MapPin, Clock, DollarSign, Users, Building2, Linkedin, Twitter, Facebook } from "lucide-react"
+import Header from "../components/header"
+import Footer from "../components/footer"
+
 function LandingPage() {
   return (
 
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center text-white font-bold">
-              S
-            </div>
-            <span className="text-xl font-bold text-gray-900">Skillora</span>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-blue-50 to-white py-16">
@@ -214,9 +207,12 @@ function LandingPage() {
             <p className="text-gray-600 mb-8 leading-relaxed">
               Create your profile, upload your resume, and start applying to your dream jobs today.
             </p>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white w-full mb-4 py-2 font-semibold">
+            <a
+              href="/auth"
+              className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-2 rounded-md font-semibold w-full mb-4 text-center transition-colors"
+            >
               Get Started
-            </button>
+            </a>
             <a href="#" className="text-blue-600 font-medium text-sm hover:underline">
               Already have an account? Login
             </a>
@@ -233,9 +229,12 @@ function LandingPage() {
             <p className="text-gray-600 mb-8 leading-relaxed">
               Post job listings, manage applications, and find the perfect candidates for your team.
             </p>
-            <button className="bg-green-600 hover:bg-green-700 text-white w-full mb-4 py-2 font-semibold">
+            <a
+              href="/auth"
+              className="inline-block bg-green-600 hover:bg-green-700 text-white px-8 py-2 rounded-md font-semibold w-full mb-4 text-center transition-colors"
+            >
               Post a Job
-            </button>
+            </a>
             <a href="#" className="text-green-600 font-medium text-sm hover:underline">
               Employer Login
             </a>
@@ -262,128 +261,7 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-50 border-t border-gray-200 py-12 mt-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-8">
-            {/* Skillora Branding */}
-            <div className="col-span-1 md:col-span-1">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center text-white font-bold text-sm">
-                  S
-                </div>
-                <span className="text-lg font-bold text-gray-900">Skillora</span>
-              </div>
-              <p className="text-gray-600 text-sm mb-6">Connecting talented professionals with their dream careers.</p>
-              <div className="flex gap-4">
-                <a href="#" className="text-gray-400 hover:text-blue-600 transition-colors">
-                  <Linkedin className="w-5 h-5" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
-                  <Twitter className="w-5 h-5" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-blue-600 transition-colors">
-                  <Facebook className="w-5 h-5" />
-                </a>
-              </div>
-            </div>
-
-            {/* Company Links */}
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">Company</h4>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-blue-600 text-sm">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-blue-600 text-sm">
-                    Careers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-blue-600 text-sm">
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* For Job Seekers Links */}
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">For Job Seekers</h4>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-blue-600 text-sm">
-                    Browse Jobs
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-blue-600 text-sm">
-                    Career Advice
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-blue-600 text-sm">
-                    Resume Tips
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* For Employers Links */}
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">For Employers</h4>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-blue-600 text-sm">
-                    Post a Job
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-blue-600 text-sm">
-                    Employer Dashboard
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-blue-600 text-sm">
-                    Pricing
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Legal Links */}
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">Legal</h4>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-blue-600 text-sm">
-                    Privacy Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-blue-600 text-sm">
-                    Terms of Service
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-blue-600 text-sm">
-                    Cookie Policy
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Footer Bottom */}
-          <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-600 text-sm">© 2025 Skillora. All rights reserved.</p>
-            <p className="text-gray-600 text-sm mt-4 md:mt-0">Made with ❤️ for job seekers worldwide</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

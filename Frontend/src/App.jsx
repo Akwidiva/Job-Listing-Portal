@@ -11,6 +11,8 @@ import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/auth';
 import Jobseekerprofile from './pages/Jobseekerprofile';
 import ResumeManagement from './pages/resumemanagement';
+import AppliedJobs from './pages/appliedjobs';
+import EmployerDashboard from './pages/employerdashboard';
 
 // Component that redirects to Google OAuth
 function GoogleRedirect() {
@@ -41,8 +43,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/employer-dashboard" element={<EmployerDashboard />} />
           <Route path="/profile" element={<Jobseekerprofile />} />
           <Route path="/resume" element={<ResumeManagement />} />
+          <Route path="/applied-jobs" element={<AppliedJobs />} />
           <Route path="/google" element={<GoogleRedirect />} />
           <Route path="/register-google" element={<GoogleRedirect />} />
           {/* Apple routes commented out - requires paid Apple Developer account */}

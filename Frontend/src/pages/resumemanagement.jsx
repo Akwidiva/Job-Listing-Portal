@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Header from "../components/header"
 import Footer from "../components/footer"
-import Sidebar from "../components/sidebar"
+import JobSeekerSidebar from "../components/jobseekersidebar"
 
 export default function ResumeManagement() {
   const navigate = useNavigate()
@@ -38,7 +38,7 @@ export default function ResumeManagement() {
       <Header />
 
       <div className="flex flex-1">
-        <Sidebar />
+        <JobSeekerSidebar />
 
         {/* Main Content */}
         <main className="flex-1 overflow-auto">

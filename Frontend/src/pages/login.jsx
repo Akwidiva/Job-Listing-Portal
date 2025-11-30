@@ -36,7 +36,12 @@ function Login() {
       localStorage.setItem('token', data.token)
       localStorage.setItem('user', JSON.stringify(data.user))
 
-      navigate("/dashboard")
+      // Redirect based on user type
+      if (data.user.userType === 'employer') {
+        navigate("/employer-dashboard")
+      } else {
+        navigate("/dashboard")
+      }
     } catch (err) {
       setError("An error occurred. Please try again.")
       console.error("Login error:", err)

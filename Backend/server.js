@@ -25,36 +25,36 @@ app.use(session({
   cookie: { secure: false } // Set to true in production with HTTPS
 }));
 
-// Passport Google OAuth Configuration
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: `${process.env.BACKEND_URL}/api/auth/google/callback`
-  },
-  async (accessToken, refreshToken, profile, done) => {
-    try {
-      // Check if user already exists
-      let user = await User.findOne({ email: profile.emails[0].value });
+// Passport Google OAuth Configuration - Commented out for testing
+// passport.use(new GoogleStrategy({
+//     clientID: process.env.GOOGLE_CLIENT_ID,
+//     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//     callbackURL: `${process.env.BACKEND_URL}/api/auth/google/callback`
+//   },
+//   async (accessToken, refreshToken, profile, done) => {
+//     try {
+//       // Check if user already exists
+//       let user = await User.findOne({ email: profile.emails[0].value });
 
-      if (user) {
-        // User exists, return user
-        return done(null, user);
-      } else {
-        // Create new user
-        const newUser = new User({
-          username: profile.displayName,
-          email: profile.emails[0].value,
-          password: await bcrypt.hash(Math.random().toString(36), 12), // Random password for OAuth users
-        });
+//       if (user) {
+//         // User exists, return user
+//         return done(null, user);
+//       } else {
+//         // Create new user
+//         const newUser = new User({
+//           username: profile.displayName,
+//           email: profile.emails[0].value,
+//           password: await bcrypt.hash(Math.random().toString(36), 12), // Random password for OAuth users
+//         });
 
-        user = await newUser.save();
-        return done(null, user);
-      }
-    } catch (error) {
-      return done(error, null);
-    }
-  }
-));
+//         user = await newUser.save();
+//         return done(null, user);
+//       }
+//     } catch (error) {
+//       return done(error, null);
+//     }
+//   }
+// ));
 
 // Apple OAuth Strategy - Commented out (requires paid Apple Developer account)
 // passport.use(new AppleStrategy({
@@ -107,9 +107,12 @@ app.use(passport.initialize());
 
 // MongoDB User Schema
 const userSchema = new mongoose.Schema({
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
   username: String,
   email: { type: String, unique: true },
   password: String,
+  userType: { type: String, required: true, enum: ['job-seeker', 'employer'] },
   resetPasswordToken: String,
   resetPasswordExpires: Date
 });
@@ -150,7 +153,7 @@ app.get('/', (req, res) => {
 // Register Route
 app.post('/api/auth/register', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { firstName, lastName, email, password, userType } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -163,9 +166,12 @@ app.post('/api/auth/register', async (req, res) => {
 
     // Create user
     const user = new User({
-      username,
+      firstName,
+      lastName,
+      username: `${firstName} ${lastName}`,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      userType
     });
 
     await user.save();

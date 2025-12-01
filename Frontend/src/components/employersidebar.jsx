@@ -4,7 +4,7 @@ export default function EmployerSidebar() {
   const [userName] = useState(() => {
     if (typeof window !== "undefined") {
       const user = localStorage.getItem("user")
-      return user ? JSON.parse(user).name || "User" : "User"
+      return user ? JSON.parse(user).name || JSON.parse(user).email.split('@')[0] || "User" : "User"
     }
     return "User"
   })

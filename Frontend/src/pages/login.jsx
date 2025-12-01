@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Link, useNavigate } from 'react-router-dom'
 import Header from '../components/header'
 import Footer from '../components/footer'
@@ -10,6 +10,34 @@ function Login() {
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+
+  // Handle Google OAuth callback
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const token = urlParams.get('token')
+    const userData = urlParams.get('user')
+
+    if (token && userData) {
+      try {
+        const user = JSON.parse(decodeURIComponent(userData))
+        localStorage.setItem('token', token)
+        localStorage.setItem('user', JSON.stringify(user))
+
+        // Redirect based on user type
+        if (user.userType === 'employer') {
+          navigate("/employer-dashboard")
+        } else {
+          navigate("/dashboard")
+        }
+
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname)
+      } catch (err) {
+        setError("Failed to process Google authentication")
+        console.error("Google auth callback error:", err)
+      }
+    }
+  }, [navigate])
 
   const handleEmailLogin = async (e) => {
     e.preventDefault()
@@ -28,7 +56,7 @@ function Login() {
       const data = await response.json()
 
       if (!response.ok) {
-        setError(data.message || "Login failed. Please try again.")
+        setError(data.error || "Login failed. Please try again.")
         return
       }
 
@@ -54,7 +82,7 @@ function Login() {
     setError("")
     setIsLoading(true)
     try {
-      window.location.href = "/api/auth/google"
+      window.location.href = "http://localhost:5000/api/auth/google"
     } catch (err) {
       setError("Google login failed. Please try again.")
       console.error("Google login error:", err)

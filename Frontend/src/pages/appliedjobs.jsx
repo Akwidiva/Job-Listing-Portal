@@ -46,7 +46,7 @@ export default function AppliedJobs() {
     }
     try {
       const userData = JSON.parse(user)
-      setUserName(userData.name || userData.email)
+      setUserName(userData.name || userData.email.split('@')[0] || "User")
     } catch {
       navigate("/login")
       return

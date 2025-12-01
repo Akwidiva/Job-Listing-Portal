@@ -1,148 +1,149 @@
 # Job-Listing-Portal
-Our Job Listing Portal is a dynamic web application designed to connect job seekers with potential employers efficiently.
 
-📁 Project Folder Structure
-Job-Listing-Portal/
-├── frontend/
-│ ├── src/
-│ │ ├── components/
-│ │ │ ├── Auth/
-│ │ │ │ ├── LoginForm.js
-│ │ │ │ └── RegisterForm.js
-│ │ ├── pages/
-│ │ │ ├── LoginPage.js
-│ │ │ └── RegisterPage.js
-│ └── ... (other client-side files)
-├── backend/
-│ ├── src/
-│ │ ├── routes/
-│ │ │ └── auth.js <-- Endpoints for /api/login and /api/register
-│ │ ├── controllers/
-│ │ │ └── authController.js
-│ │ ├── middleware/
-│ │ │ └── authMiddleware.js <-- JWT verification, Rate Limiting
-│ │ └── config/
-│ │ └── db.js
-│ └── ... (other server-side files)
-└── package.json (root)
+A full-stack Job Listing Portal connecting job seekers and employers. This README summarizes what's been implemented, how to run the project locally, environment variables, and troubleshooting tips.
 
+---
 
+## Status — What has been completed
 
+- Frontend
+    - React app with login, registration, password reset pages and dashboard pages.
+    - Tailwind CSS configuration fixed (consolidated to Tailwind v3 to avoid PostCSS plugin conflicts).
+    - Login component: handles email/password login and Google OAuth callback.
+    - Header displays authenticated user name and dynamic role ("Employer" / "Job Seeker").
 
-Job Listing Portal: User Authentication Module
+- Backend
+    - Express server with auth routes (`/api/auth/register`, `/api/auth/login`, `/api/auth/google`).
+    - MongoDB (Mongoose) User model and connection.
+    - JWT-based authentication for protected routes.
+    - Rate limiting added and configured to avoid proxy header errors.
+    - Error responses standardized to `error` field to match frontend expectations.
 
-This document outlines the structure, responsibilities, and implementation flow for the initial User Authentication (Auth) module of the Job Listing Portal project. This module is critical as it establishes security, user identity, and session management for the entire application.
+---
 
-🎯 Project Scope: User Authentication
+## Tech stack
 
-The goal is to implement a secure system for user registration, login, session handling, and access control.
+- Frontend: React, react-router, Tailwind CSS, PostCSS
+- Backend: Node.js, Express, Mongoose, Passport (Google OAuth), express-rate-limit
+- Database: MongoDB (Atlas or local)
 
-Core Features to be Implemented:
+---
 
-User Registration (/api/register): Securely store user credentials and profile information (Name, Email, Password Hash, User Type).
+## Project structure (high level)
 
-User Login (/api/login): Verify user credentials and issue a signed JSON Web Token (JWT).
+- `Frontend/` — React app
+    - `src/components/` — shared components (Header, Footer, Auth forms)
+    - `src/pages/` — page-level components (LoginPage, RegisterPage, Dashboard)
 
-Session Management: Implement JWT verification middleware for protected routes.
+- `Backend/` — Express API
+    - `src/controllers/` — request handlers (authController.js)
+    - `src/routes/` — route definitions
+    - `src/models/` — Mongoose schemas (User.js)
+    - `config/` — DB config
 
-Security: Implement robust password hashing (Bcrypt/Argon2) and rate limiting.
+---
 
-👥 Team Division (6 Members)
+## Environment variables
 
-The work is divided into three parallel streams: Back-End API, Front-End UI, and Infrastructure/Security.
+Create a `.env` file in the `Backend/` folder with the following variables (example names):
 
-I. Back-End Team (Members 1, 2, 3, 6)
+```
+MONGO_URI=<your-mongodb-connection-string>
+JWT_SECRET=<strong_jwt_secret>
+FRONTEND_URL=http://localhost:3000
+GOOGLE_CLIENT_ID=<google_oauth_client_id>
+GOOGLE_CLIENT_SECRET=<google_oauth_client_secret>
+GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback
+PORT=5000
+```
 
-Member
+Make sure your Google OAuth credentials are configured to allow `http://localhost:5000/api/auth/google/callback`.
 
-Role Focus
+---
 
-Specific Tasks (Deliverables)
+## Running locally (development)
 
-Member 1
+Open two terminals. All example commands are for PowerShell on Windows.
 
-Registration API
+1) Backend (dev with nodemon)
 
-Develop /api/register, implement password hashing (Bcrypt/Argon2), and handle database insertion logic.
+```powershell
+cd .\Backend
+npm install
+npm run dev
+```
 
-Member 2
+The backend listens on the port set in `.env` (default `5000`).
 
-Login API & Token Generation
+2) Frontend
 
-Develop /api/login, implement password verification, and handle JWT creation and signing.
+```powershell
+cd .\Frontend
+npm install
+npm start
+```
 
-Member 3
+The frontend runs on `http://localhost:3000` by default and proxies API calls to the backend where applicable.
 
-Security Middleware
+---
 
-Implement Rate Limiting on auth endpoints and develop the JWT Authentication Middleware for protected routes. Configure CORS and HTTPS/SSL.
+## Building production frontend
 
-Member 6
+```powershell
+cd .\Frontend
+npm run build
+```
 
-Database & Testing
+This generates a `build/` folder which can be served by a static server or deployed to hosting (Netlify, Vercel, etc.). If serving via the backend, copy or serve the `build` folder from the server.
 
-Finalize the Users Database Schema (Email, Hash, Salt, User Type, etc.). Write and execute comprehensive Unit and Integration Tests for all Back-End endpoints (M1, M2, M3).
+---
 
-II. Front-End Team (Members 4, 5)
+## Key API endpoints (examples)
 
-Member
+- POST `/api/auth/register` — register a new user
+    - body: `{ firstName, lastName, email, password, userType }` where `userType` is `'job-seeker'` or `'employer'`
 
-Role Focus
+- POST `/api/auth/login` — login with email/password
+    - body: `{ email, password }`
 
-Primary Components
+- GET `/api/auth/google` — initiate Google OAuth (frontend redirects the browser to this URL)
 
-Member 4
+- GET `/api/auth/google/callback` — Google OAuth callback (backend then redirects to frontend with `token` and `user` in query string)
 
-Login UI & Session Handling
+Note: Error responses from the API use `{ error: "..." }` and successful auth responses include `{ token, user }`.
 
-Design and build the Login Form/Page (pages/LoginPage.js, components/Auth/LoginForm.js). Implement client-side token storage and session check logic.
+---
 
-Member 5
+## Testing the flows (quick)
 
-Registration UI & Reset
+1. Register a user as `userType: 'employer'` and refresh the frontend — header should show `Employer` next to the user.
+2. Register a user as `userType: 'job-seeker'` — header should show `Job Seeker`.
+3. Click "Continue with Google" on the Login page — the app should redirect to your backend OAuth route and ultimately return to the frontend with the JWT and user data.
 
-Design and build the Registration Form/Page (pages/RegisterPage.js, components/Auth/RegisterForm.js). Implement client-side form validation and success/error states.
+If registration does not persist, check the backend terminal for error logs (validation, MongoDB errors). The backend has extra console logs for registration success/failure.
 
-📁 Project Folder Structure
+---
 
-The project uses a standard two-folder microservice architecture:
+## Troubleshooting
 
-Job-Listing-Portal/
-├── frontend/                     # React Application (M4, M5 Focus)
-│   ├── src/
-│   │   ├── api/                  # API call wrappers (e.g., auth.js)
-│   │   ├── components/
-│   │   │   └── auth/           # LoginForm.js, RegisterForm.js
-│   │   └── pages/              # LoginPage.js, RegisterPage.js, Dashboard.js
-│
-└── backend/                      # Server/API (M1, M2, M3, M6 Focus)
-    ├── src/
-    │   ├── controllers/        # authController.js (M1, M2 logic)
-    │   ├── middleware/         # authMiddleware.js (M3 security)
-    │   ├── routes/             # auth.js (Endpoint definitions)
-    │   └── config/             # db.js (M6 schema/connection)
+- Tailwind build error: If you see the PostCSS plugin error, ensure `tailwindcss` is v3.x and `postcss.config.js` uses `require('tailwindcss')` (not `@tailwindcss/postcss`).
+- OAuth blank page: Ensure frontend redirects to `http://localhost:5000/api/auth/google` (or your `BACKEND_URL`) — this is already fixed in the project.
+- JWT / auth issues: Verify `JWT_SECRET` matches the backend `.env` and that frontend and backend agree on token storage (frontend saves token to `localStorage.token`).
 
+---
 
-🔗 Implementation Flow and Dependencies
+## Next recommended improvements
 
-Adhering to this flow is critical to ensure team members are not blocked.
+- Add unit/integration tests for auth endpoints and frontend forms.
+- Add server-side validation and more robust error messages.
+- Improve UI feedback for OAuth flows (loading states / error screens).
+- Add role-based route guards on frontend (only employers see employer dashboard links).
 
-Phase 1: Foundation (M6 & M3 Setup)
+---
 
-M6 (Database): Must finalize the Users table schema first.
+If you want, I can:
+- commit the README changes and create a PR on the `dev` branch,
+- add a short developer run script, or
+- add a brief troubleshooting script to verify env variables and connectivity.
 
-M3 (Infrastructure): Must configure the basic project environment, CORS policies, and HTTPS readiness.
-
-M2 & M1 (API Contract): Must jointly define the exact request/response formats for /api/login and /api/register to unblock the Front-End team.
-
-Phase 2: Parallel Core Development
-
-Back-End (M1 & M2): Work in parallel on the registration and login endpoint logic. M1's hashing logic must be defined before M2 can implement the password verification step.
-
-Front-End (M4 & M5): Work in parallel on the UI components and client-side validation using mock data immediately after the API Contract is defined.
-
-Phase 3: Security & Verification
-
-M3 (Middleware): Implements Rate Limiting immediately. The full Authentication Middleware depends on M2 defining the final JWT structure (payload fields and signature algorithm).
-
-M6 (Testing): Continuously writes and executes tests on all M1, M2, and M3 endpoints to ensure security and functionality requirements are met
+Feel free to tell me which addition you'd like next.

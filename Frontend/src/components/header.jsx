@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 export default function Header() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [userName, setUserName] = useState("")
+  const [userType, setUserType] = useState("")
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -13,7 +14,9 @@ export default function Header() {
       try {
         const userData = JSON.parse(user)
         setIsAuthenticated(true)
-        setUserName(userData.name || userData.email)
+        setUserName(userData.name || userData.email.split('@')[0] || "User")
+        const displayUserType = userData.userType === 'employer' ? 'Employer' : 'Job Seeker'
+        setUserType(displayUserType)
       } catch (e) {
         setIsAuthenticated(false)
       }
@@ -52,7 +55,10 @@ export default function Header() {
               <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-sm">{userName.charAt(0).toUpperCase()}</span>
               </div>
-              <span className="text-gray-900 font-medium text-sm hidden sm:inline">{userName}</span>
+              <div className="hidden sm:flex flex-col">
+                <span className="text-gray-900 font-medium text-sm">{userName}</span>
+                <span className="text-gray-500 text-xs">{userType}</span>
+              </div>
               <button
                 onClick={() => {
                   localStorage.removeItem("user")

@@ -1,34 +1,34 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useRouter } from "next/router"
 import Header from "../components/header"
 import Footer from "../components/footer"
 import EmployerSidebar from "../components/employersidebar"
 
 
 export default function EmployerDashboard() {
-  const navigate = useNavigate()
+  const router = useRouter()
   const [companyName, setCompanyName] = useState("")
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const user = localStorage.getItem("user")
     if (!user) {
-      navigate("/login")
+      router.push("/login")
       return
     }
     try {
       const userData = JSON.parse(user)
-      if (userData.userType !== "employer") {
-        navigate("/dashboard")
+      if (userData.role !== "employer") {
+        router.push("/dashboard")
         return
       }
       setCompanyName(userData.companyName || "Company")
     } catch {
-      navigate("/login")
+      router.push("/login")
       return
     }
     setIsLoading(false)
-  }, [navigate])
+  }, [router])
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>
@@ -200,10 +200,7 @@ export default function EmployerDashboard() {
               <div className="bg-white border border-gray-200 rounded-lg p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-6">Quick Actions</h3>
                 <div className="space-y-3">
-                  <button
-                    onClick={() => navigate("/create-job-listing")}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-md font-medium transition-colors flex items-center justify-center gap-2"
-                  >
+                  <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-md font-medium transition-colors flex items-center justify-center gap-2">
                     + Post New Job
                   </button>
                   <button className="w-full bg-white border border-gray-200 hover:bg-gray-50 text-gray-900 px-4 py-3 rounded-md font-medium transition-colors flex items-center gap-2">

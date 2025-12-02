@@ -6,29 +6,29 @@ import EmployerSidebar from "../components/employersidebar"
 
 
 export default function EmployerDashboard() {
-  const router = useRouter()
+  const navigate = useNavigate()
   const [companyName, setCompanyName] = useState("")
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const user = localStorage.getItem("user")
     if (!user) {
-      router.push("/login")
+      navigate("/login")
       return
     }
     try {
       const userData = JSON.parse(user)
-      if (userData.role !== "employer") {
-        router.push("/dashboard")
+      if (userData.userType !== "employer") {
+        navigate("/dashboard")
         return
       }
       setCompanyName(userData.companyName || "Company")
     } catch {
-      router.push("/login")
+      navigate("/login")
       return
     }
     setIsLoading(false)
-  }, [router])
+  }, [navigate])
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>

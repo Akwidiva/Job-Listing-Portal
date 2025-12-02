@@ -200,7 +200,10 @@ export default function EmployerDashboard() {
               <div className="bg-white border border-gray-200 rounded-lg p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-6">Quick Actions</h3>
                 <div className="space-y-3">
-                  <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-md font-medium transition-colors flex items-center justify-center gap-2">
+                  <button
+                    onClick={() => navigate("/create-job-listing")}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-md font-medium transition-colors flex items-center justify-center gap-2"
+                  >
                     + Post New Job
                   </button>
                   <button className="w-full bg-white border border-gray-200 hover:bg-gray-50 text-gray-900 px-4 py-3 rounded-md font-medium transition-colors flex items-center gap-2">

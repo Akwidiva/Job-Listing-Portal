@@ -4,35 +4,41 @@ import { Link, useLocation } from "react-router-dom"
 export default function EmployerSidebar() {
   const location = useLocation()
   const pathname = location.pathname
-  const [companyName] = useState(() => {
+  const [personName] = useState(() => {
     if (typeof window !== "undefined") {
       const user = localStorage.getItem("user")
-      return user ? JSON.parse(user).companyName || "Company" : "Company"
+      if (user) {
+        const userData = JSON.parse(user)
+        return userData.name || `${userData.firstName || ""} ${userData.lastName || ""}`.trim() || "Employer"
+      }
     }
-    return "Company"
+    return "Employer"
   })
 
   const isActive = (path) => pathname === path
 
   return (
-    <aside className="w-48 bg-white border-r border-gray-200 min-h-screen flex flex-col">
-      {/* Company Profile Section */}
-      <div className="p-4 border-b border-gray-200">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-bold text-sm">{companyName.charAt(0).toUpperCase()}</span>
-          </div>
-          <div className="min-w-0">
-            <p className="font-semibold text-gray-900 text-xs truncate">{companyName}</p>
-            <p className="text-gray-600 text-xs">Employer</p>
+    <aside className="w-48 bg-white border-r border-gray-200 min-h-screen flex flex-col pt-6">
+      {/* Top spacer increases distance from header */}
+      <div className="h-4" />
+
+      {/* Main area pushes profile+nav toward bottom */}
+      <div className="flex-1 flex flex-col justify-end p-3">
+        {/* Employer Profile Section - placed near bottom */}
+        <div className="p-3 border-t border-gray-100 mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-white font-bold text-sm">{personName.charAt(0).toUpperCase()}</span>
+            </div>
+            <div className="min-w-0">
+              <p className="font-semibold text-gray-900 text-sm truncate">{personName}</p>
+              <p className="text-gray-600 text-xs">Employer</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 p-3 space-y-1">
-        {/* Navigation Section */}
-        <div className="mb-4">
+        {/* Navigation - semantic list */}
+        <nav aria-label="Employer navigation" className="mb-4">
           <p className="text-xs font-semibold text-gray-500 uppercase mb-2 px-2">Navigation</p>
           <div className="space-y-1">
             <Link
@@ -86,9 +92,9 @@ export default function EmployerSidebar() {
               🏢 Company Profile
             </Link>
           </div>
-        </div>
 
-        <div>
+          <div className="border-t border-gray-200 mt-4 mb-4" />
+
           <p className="text-xs font-semibold text-gray-500 uppercase mb-2 px-2">Account</p>
           <div className="space-y-1">
             <Link
@@ -104,8 +110,8 @@ export default function EmployerSidebar() {
               ❓ Help & Support
             </Link>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </div>
 
       <div className="p-3 border-t border-gray-200">
         <button

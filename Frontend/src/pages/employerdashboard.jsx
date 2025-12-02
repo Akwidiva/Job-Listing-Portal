@@ -4,28 +4,31 @@ import Header from "../components/header"
 import Footer from "../components/footer"
 import EmployerSidebar from "../components/employersidebar"
 
+
 export default function EmployerDashboard() {
-  const navigate = useNavigate()
+  const router = useRouter()
+  const [companyName, setCompanyName] = useState("")
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const user = localStorage.getItem("user")
     if (!user) {
-      navigate("/login")
+      router.push("/login")
       return
     }
     try {
       const userData = JSON.parse(user)
-      if (userData.userType !== 'employer') {
-        navigate("/dashboard")
+      if (userData.role !== "employer") {
+        router.push("/dashboard")
         return
       }
+      setCompanyName(userData.companyName || "Company")
     } catch {
-      navigate("/login")
+      router.push("/login")
       return
     }
     setIsLoading(false)
-  }, [navigate])
+  }, [router])
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>
@@ -40,147 +43,281 @@ export default function EmployerDashboard() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-auto">
-          {/* Page Header */}
-          <section className="bg-white px-8 py-6 border-b border-gray-200">
+          {/* Dashboard Header */}
+          <section className="bg-white px-8 py-8 border-b border-gray-200">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">📊</span>
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Employer Dashboard</h1>
-                  <p className="text-gray-600 text-sm">
-                    Manage your job postings and track applications
-                  </p>
-                </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Employer Dashboard</h1>
+                <p className="text-gray-600 text-sm">
+                  Manage your job listings, applications, and recruitment activities
+                </p>
               </div>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors">
                 + Post New Job
               </button>
             </div>
           </section>
 
-          {/* Dashboard Content */}
+          {/* Statistics Cards */}
           <section className="px-8 py-8">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">💼</span>
-                  <div>
-                    <p className="text-2xl font-bold text-gray-900">12</p>
-                    <p className="text-gray-600 text-sm">Active Jobs</p>
-                  </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+              {/* Active Job Listings */}
+              <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-gray-600 font-semibold">Active Job Listings</h3>
+                  <span className="text-2xl">📋</span>
                 </div>
+                <p className="text-4xl font-bold text-gray-900 mb-2">12</p>
+                <p className="text-green-600 text-sm">+2 from last month</p>
               </div>
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <div className="flex items-center gap-3">
+
+              {/* Total Applications */}
+              <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-gray-600 font-semibold">Total Applications</h3>
                   <span className="text-2xl">👥</span>
-                  <div>
-                    <p className="text-2xl font-bold text-gray-900">48</p>
-                    <p className="text-gray-600 text-sm">Total Applications</p>
-                  </div>
                 </div>
+                <p className="text-4xl font-bold text-gray-900 mb-2">48</p>
+                <p className="text-green-600 text-sm">+8 applications</p>
               </div>
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">📈</span>
-                  <div>
-                    <p className="text-2xl font-bold text-gray-900">156</p>
-                    <p className="text-gray-600 text-sm">Profile Views</p>
-                  </div>
+
+              {/* Pending Reviews */}
+              <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-gray-600 font-semibold">Pending Reviews</h3>
+                  <span className="text-2xl">⏳</span>
                 </div>
+                <p className="text-4xl font-bold text-gray-900 mb-2">15</p>
+                <p className="text-red-600 text-sm">-3 pending</p>
               </div>
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">⭐</span>
-                  <div>
-                    <p className="text-2xl font-bold text-gray-900">4.8</p>
-                    <p className="text-gray-600 text-sm">Average Rating</p>
-                  </div>
+
+              {/* Hired Candidates */}
+              <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-gray-600 font-semibold">Hired Candidates</h3>
+                  <span className="text-2xl">✓</span>
                 </div>
+                <p className="text-4xl font-bold text-gray-900 mb-2">7</p>
+                <p className="text-green-600 text-sm">+1 hired</p>
               </div>
             </div>
 
-            {/* Recent Jobs */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-bold text-gray-900">Recent Job Postings</h3>
-                <a href="/manage-jobs" className="text-blue-600 hover:text-blue-700 font-semibold text-sm">
-                  View All
-                </a>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Senior Full Stack Developer</h4>
-                    <p className="text-gray-600 text-sm">Posted 2 days ago • 12 applications</p>
+            {/* Active Job Listings Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Job Listings */}
+              <div className="lg:col-span-2">
+                <div className="bg-white border border-gray-200 rounded-lg p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900">Active Job Listings</h2>
+                      <p className="text-gray-600 text-sm">Manage and monitor your job postings</p>
+                    </div>
+                    <a href="/job-listings" className="text-blue-600 font-semibold text-sm hover:underline">
+                      View All →
+                    </a>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">
-                      Active
-                    </span>
-                    <button className="text-gray-400 hover:text-gray-600">⋯</button>
+
+                  {/* Job Cards */}
+                  <div className="space-y-4">
+                    {/* Job Card 1 */}
+                    <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="text-lg font-bold text-gray-900">Senior React Developer</h3>
+                          <p className="text-green-600 font-semibold text-xs mt-1">Active</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <button className="text-gray-600 hover:text-gray-900">✏️</button>
+                          <button className="text-gray-600 hover:text-gray-900">👁️</button>
+                        </div>
+                      </div>
+                      <div className="text-gray-600 text-sm space-y-1">
+                        <p>📍 San Francisco, CA</p>
+                        <p>👥 12 applicants • 👁️ 245 views • 📅 1/15/2024</p>
+                      </div>
+                    </div>
+
+                    {/* Job Card 2 */}
+                    <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="text-lg font-bold text-gray-900">Product Manager</h3>
+                          <p className="text-green-600 font-semibold text-xs mt-1">Active</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <button className="text-gray-600 hover:text-gray-900">✏️</button>
+                          <button className="text-gray-600 hover:text-gray-900">👁️</button>
+                        </div>
+                      </div>
+                      <div className="text-gray-600 text-sm space-y-1">
+                        <p>📍 New York, NY</p>
+                        <p>👥 8 applicants • 👁️ 180 views • 📅 1/10/2024</p>
+                      </div>
+                    </div>
+
+                    {/* Job Card 3 */}
+                    <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="text-lg font-bold text-gray-900">UX/UI Designer</h3>
+                          <p className="text-green-600 font-semibold text-xs mt-1">Active</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <button className="text-gray-600 hover:text-gray-900">✏️</button>
+                          <button className="text-gray-600 hover:text-gray-900">👁️</button>
+                        </div>
+                      </div>
+                      <div className="text-gray-600 text-sm space-y-1">
+                        <p>📍 Remote</p>
+                        <p>👥 15 applicants • 👁️ 312 views • 📅 1/8/2024</p>
+                      </div>
+                    </div>
+
+                    {/* Job Card 4 */}
+                    <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="text-lg font-bold text-gray-900">DevOps Engineer</h3>
+                          <p className="bg-yellow-100 text-yellow-700 font-semibold text-xs px-2 py-1 rounded mt-1 w-fit">
+                            Draft
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <button className="text-gray-600 hover:text-gray-900">✏️</button>
+                          <button className="text-gray-600 hover:text-gray-900">👁️</button>
+                        </div>
+                      </div>
+                      <div className="text-gray-600 text-sm space-y-1">
+                        <p>📍 Austin, TX</p>
+                        <p>👥 5 applicants • 👁️ 0 views • 📅 1/20/2024</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
+              </div>
 
-                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                  <div>
-                    <h4 className="font-semibold text-gray-900">UX/UI Designer</h4>
-                    <p className="text-gray-600 text-sm">Posted 1 week ago • 8 applications</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">
-                      Active
-                    </span>
-                    <button className="text-gray-400 hover:text-gray-600">⋯</button>
-                  </div>
+              {/* Quick Actions Sidebar */}
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-6">Quick Actions</h3>
+                <div className="space-y-3">
+                  <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-md font-medium transition-colors flex items-center justify-center gap-2">
+                    + Post New Job
+                  </button>
+                  <button className="w-full bg-white border border-gray-200 hover:bg-gray-50 text-gray-900 px-4 py-3 rounded-md font-medium transition-colors flex items-center gap-2">
+                    📋 Manage Listings
+                  </button>
+                  <button className="w-full bg-white border border-gray-200 hover:bg-gray-50 text-gray-900 px-4 py-3 rounded-md font-medium transition-colors flex items-center gap-2">
+                    📧 View Applications
+                  </button>
+                  <button className="w-full bg-white border border-gray-200 hover:bg-gray-50 text-gray-900 px-4 py-3 rounded-md font-medium transition-colors flex items-center gap-2">
+                    🏢 Company Profile
+                  </button>
                 </div>
               </div>
             </div>
 
             {/* Recent Applications */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
+            <div className="mt-8 bg-white border border-gray-200 rounded-lg p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-bold text-gray-900">Recent Applications</h3>
-                <a href="/applications" className="text-blue-600 hover:text-blue-700 font-semibold text-sm">
-                  View All
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Recent Applications</h2>
+                  <p className="text-gray-600 text-sm">Latest applications from job seekers</p>
+                </div>
+                <a href="/applications" className="text-blue-600 font-semibold text-sm hover:underline">
+                  View All →
                 </a>
               </div>
 
+              {/* Application List */}
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <span className="text-blue-600 font-semibold text-sm">JD</span>
+                {/* Application 1 */}
+                <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center font-bold text-blue-600">
+                        S
+                      </div>
+                      <div>
+                        <p className="font-bold text-gray-900">Sarah Johnson</p>
+                        <p className="text-gray-600 text-sm">Senior React Developer</p>
+                        <p className="text-gray-500 text-xs">Applied 1/22/2024</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">John Doe</h4>
-                      <p className="text-gray-600 text-sm">Applied to Senior Full Stack Developer</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-yellow-600 text-sm">New</span>
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded text-sm font-semibold hover:bg-blue-700">
-                      Review
-                    </button>
+                    <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">New</span>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                      <span className="text-green-600 font-semibold text-sm">SM</span>
+                {/* Application 2 */}
+                <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center font-bold text-purple-600">
+                        M
+                      </div>
+                      <div>
+                        <p className="font-bold text-gray-900">Michael Chen</p>
+                        <p className="text-gray-600 text-sm">Product Manager</p>
+                        <p className="text-gray-500 text-xs">Applied 1/21/2024</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Sarah Miller</h4>
-                      <p className="text-gray-600 text-sm">Applied to UX/UI Designer</p>
-                    </div>
+                    <span className="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-xs font-semibold">
+                      Reviewing
+                    </span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-gray-600 text-sm">Reviewed</span>
-                    <button className="bg-gray-600 text-white px-4 py-2 rounded text-sm font-semibold hover:bg-gray-700">
-                      View
-                    </button>
+                </div>
+
+                {/* Application 3 */}
+                <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center font-bold text-green-600">
+                        E
+                      </div>
+                      <div>
+                        <p className="font-bold text-gray-900">Emily Rodriguez</p>
+                        <p className="text-gray-600 text-sm">UX/UI Designer</p>
+                        <p className="text-gray-500 text-xs">Applied 1/20/2024</p>
+                      </div>
+                    </div>
+                    <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-semibold">
+                      Shortlisted
+                    </span>
+                  </div>
+                </div>
+
+                {/* Application 4 */}
+                <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center font-bold text-orange-600">
+                        D
+                      </div>
+                      <div>
+                        <p className="font-bold text-gray-900">David Park</p>
+                        <p className="text-gray-600 text-sm">Senior React Developer</p>
+                        <p className="text-gray-500 text-xs">Applied 1/18/2024</p>
+                      </div>
+                    </div>
+                    <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">New</span>
+                  </div>
+                </div>
+
+                {/* Application 5 */}
+                <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center font-bold text-pink-600">
+                        J
+                      </div>
+                      <div>
+                        <p className="font-bold text-gray-900">Jessica Lee</p>
+                        <p className="text-gray-600 text-sm">Product Manager</p>
+                        <p className="text-gray-500 text-xs">Applied 1/16/2024</p>
+                      </div>
+                    </div>
+                    <span className="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-xs font-semibold">
+                      Reviewing
+                    </span>
                   </div>
                 </div>
               </div>

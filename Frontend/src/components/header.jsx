@@ -38,15 +38,31 @@ export default function Header() {
 
         {/* Navigation Links */}
         <nav className="hidden md:flex items-center gap-8">
-          <Link to="/jobs" className="text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors">
-            Find Jobs
-          </Link>
-          <Link to="/employers" className="text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors">
-            For Employers
-          </Link>
-          <Link to="/about" className="text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors">
-            About
-          </Link>
+          {userType === 'Employer' ? (
+            <>
+              <Link to="/employer-dashboard" className="text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors">
+                Dashboard
+              </Link>
+              <Link to="/job-listings" className="text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors">
+                Job Listings
+              </Link>
+              <Link to="/applications" className="text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors">
+                Applications
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to="/jobs" className="text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors">
+                Find Jobs
+              </Link>
+              <Link to="/employers" className="text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors">
+                For Employers
+              </Link>
+              <Link to="/about" className="text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors">
+                About
+              </Link>
+            </>
+          )}
         </nav>
 
         <div className="flex items-center gap-4">

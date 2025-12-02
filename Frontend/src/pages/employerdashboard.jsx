@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
-import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import Header from "../components/header"
 import Footer from "../components/footer"
 import EmployerSidebar from "../components/employersidebar"

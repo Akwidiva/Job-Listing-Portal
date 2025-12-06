@@ -1,0 +1,242 @@
+/* ===========================
+   Job Listings Section
+=========================== */
+.job-listings {
+  padding: 80px 0;
+  background: #f7f9fc;
+  font-family: "Poppins", sans-serif;
+}
+
+.container {
+  width: 90%;
+  margin: auto;
+  max-width: 1300px;
+}
+
+/* Section Header */
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #222;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+/* ===========================
+   Filter Buttons
+=========================== */
+.filter-categories {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 35px;
+}
+
+.filter-btn {
+  background: #ffffff;
+  border: 2px solid #e0e6ff;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: 0.3s ease;
+  color: #444;
+}
+
+.filter-btn:hover {
+  background: #eef3ff;
+  border-color: #c3cdff;
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, #5b6cff, #6e8bff);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(93, 107, 255, 0.35);
+}
+
+/* ===========================
+   Jobs Grid
+=========================== */
+.jobs-grid {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* ===========================
+   Job Card
+=========================== */
+.job-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 25px;
+  border: 1px solid #e4e8f3;
+  transition: 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  position: relative;
+  cursor: pointer;
+}
+
+.job-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* ===========================
+   Job Header
+=========================== */
+.job-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.company-logo {
+  width: 55px;
+  height: 55px;
+  background: #f1f4ff;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+/* Heart Save Button */
+.save-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  transition: 0.3s;
+}
+
+.save-btn:hover {
+  transform: scale(1.2);
+}
+
+/* Job Titles */
+.job-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #1a1a1a;
+}
+
+.company-info {
+  display: flex;
+  gap: 12px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* ===========================
+   Job Details
+=========================== */
+.job-details {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+/* ===========================
+   Job Tags
+=========================== */
+.job-tags {
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tag {
+  background: #eef2ff;
+  color: #5260ff;
+  padding: 6px 12px;
+  border-radius: 25px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid #d8deff;
+}
+
+/* ===========================
+   Action Buttons
+=========================== */
+.job-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 12px;
+}
+
+.apply-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #5468ff, #7388ff);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 0;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(84,104,255,0.3);
+}
+
+.apply-btn:hover {
+  opacity: 0.9;
+}
+
+.view-btn {
+  flex: 1;
+  background: #ffffff;
+  color: #444;
+  border: 1px solid #dbe0ff;
+  border-radius: 10px;
+  padding: 12px 0;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.view-btn:hover {
+  background: #eef2ff;
+}
+
+/* ===========================
+   Load More Button
+=========================== */
+.load-more {
+  text-align: center;
+  margin-top: 35px;
+}
+
+.load-more-btn {
+  background: #ffffff;
+  border: 2px solid #d4ddff;
+  padding: 12px 25px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: 0.3s ease;
+}
+
+.load-more-btn:hover {
+  background: #eef3ff;
+  border-color: #bfc9ff;
+  transform: translateY(-3px);
+}

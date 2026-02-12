@@ -1,0 +1,9 @@
+{
+  "mongodb.connections": [
+    {
+      "name": "JobListingPortal Local",
+      "connectionString": "mongodb://localhost:27017/jobportal",
+      "readOnly": false
+    }
+  ]
+}

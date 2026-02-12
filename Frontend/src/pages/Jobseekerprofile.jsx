@@ -41,9 +41,9 @@ export default function Jobseekerprofile() {
           {/* Page Header */}
           <section className="bg-white px-8 py-6 border-b border-gray-200">
             <div className="flex items-center gap-2 mb-4 text-sm text-gray-600">
-              <a href="/dashboard" className="text-blue-600 hover:underline">
+              <href to="/dashboard" className="text-blue-600 hover:underline">
                 Dashboard
-              </a>
+              </href>
               <span>›</span>
               <span>My Profile</span>
             </div>

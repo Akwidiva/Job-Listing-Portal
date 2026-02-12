@@ -65,7 +65,10 @@ export default function Dashboard() {
               </div>
 
               {/* Manage Profile Card */}
-              <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+              <div
+                className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                onClick={() => navigate("/profile-management")}
+              >
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-3xl">👤</span>
                 </div>

@@ -10,9 +10,14 @@ import Dashboard from './pages/Jobseekerdashboard';
 import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/auth';
 import Jobseekerprofile from './pages/Jobseekerprofile';
+import ProfileManagement from './pages/ProfileManagement';
+import ProfileDetails from './pages/ProfileDetails';
 import ResumeManagement from './pages/resumemanagement';
 import AppliedJobs from './pages/appliedjobs';
 import EmployerDashboard from './pages/employerdashboard';
+import EmployerCompanyProfile from './pages/EmployerCompanyProfile';
+import EditCompanyProfile from './pages/EditCompanyProfile';
+import CompanyBranding from './pages/CompanyBranding';
 
 // Component that redirects to Google OAuth
 function GoogleRedirect() {
@@ -45,6 +50,8 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/employer-dashboard" element={<EmployerDashboard />} />
           <Route path="/profile" element={<Jobseekerprofile />} />
+          <Route path="/profile-management" element={<ProfileManagement />} />
+          <Route path="/profile-details" element={<ProfileDetails />} />
           <Route path="/resume" element={<ResumeManagement />} />
           <Route path="/applied-jobs" element={<AppliedJobs />} />
           <Route path="/google" element={<GoogleRedirect />} />

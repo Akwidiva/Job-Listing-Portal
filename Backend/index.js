@@ -6,6 +6,9 @@ const connectDB = require('./src/config/db');
 require('dotenv').config();
 
 const authRoutes = require('./src/routes/auth');
+const profileRoutes = require('./src/routes/profile');
+const path = require('path');
+const adminRoutes = require('./src/routes/admin');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -58,6 +61,11 @@ app.use(limiter);
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
+app.use('/api/admin', adminRoutes);
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Health check
 app.get('/', (req, res) => {

@@ -6,7 +6,7 @@ import EmployerSidebar from "../components/employersidebar"
 
 
 export default function EmployerDashboard() {
-  const router = useRouter()
+  const navigate = useNavigate()
   const [companyName, setCompanyName] = useState("")
   const [isLoading, setIsLoading] = useState(true)
 
@@ -28,7 +28,7 @@ export default function EmployerDashboard() {
       return
     }
     setIsLoading(false)
-  }, [router])
+  })
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>

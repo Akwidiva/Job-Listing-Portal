@@ -36,7 +36,7 @@ export default function EmployerSidebar() {
           <p className="text-xs font-semibold text-gray-500 uppercase mb-2 px-2">Navigation</p>
           <div className="space-y-1">
             <Link
-              href="/employer-dashboard"
+              to="/employer-dashboard"
               className={`w-full text-left px-3 py-2 rounded text-xs font-medium transition-colors ${
                 isActive("/employer-dashboard")
                   ? "bg-blue-100 text-blue-600"
@@ -46,7 +46,7 @@ export default function EmployerSidebar() {
               📊 Dashboard
             </Link>
             <Link
-              href="/job-listings"
+              to="/job-listings"
               className={`w-full text-left px-3 py-2 rounded text-xs font-medium transition-colors ${
                 isActive("/job-listings")
                   ? "bg-blue-100 text-blue-600"
@@ -56,7 +56,7 @@ export default function EmployerSidebar() {
               📋 Job Listings
             </Link>
             <Link
-              href="/applications"
+              to="/applications"
               className={`w-full text-left px-3 py-2 rounded text-xs font-medium transition-colors ${
                 isActive("/applications")
                   ? "bg-blue-100 text-blue-600"
@@ -66,7 +66,7 @@ export default function EmployerSidebar() {
               📧 Applications
             </Link>
             <Link
-              href="/company-profile"
+              to="/company-profile"
               className={`w-full text-left px-3 py-2 rounded text-xs font-medium transition-colors ${
                 isActive("/company-profile")
                   ? "bg-blue-100 text-blue-600"

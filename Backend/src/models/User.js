@@ -31,6 +31,28 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
   },
+  bio: {
+    type: String,
+    default: ''
+  },
+  location: {
+    type: String,
+    default: ''
+  },
+  phone: {
+    type: String,
+    default: ''
+  },
+  socialLinks: {
+    type: Object,
+    default: {}
+  },
+  resumes: [{
+    filename: String,
+    originalName: String,
+    path: String,
+    uploadedAt: { type: Date, default: Date.now }
+  }],
   isVerified: {
     type: Boolean,
     default: false,

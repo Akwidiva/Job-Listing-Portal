@@ -9,6 +9,8 @@ const authRoutes = require('./src/routes/auth');
 const profileRoutes = require('./src/routes/profile');
 const path = require('path');
 const adminRoutes = require('./src/routes/admin');
+const jobRoutes = require('./src/routes/jobs');
+const applicationRoutes = require('./src/routes/applications');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -63,6 +65,8 @@ app.use(limiter);
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/jobs', jobRoutes);
+app.use('/api/applications', applicationRoutes);
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

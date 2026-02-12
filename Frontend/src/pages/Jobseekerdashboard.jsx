@@ -8,6 +8,8 @@ export default function Dashboard() {
   const navigate = useNavigate()
   const [userName, setUserName] = useState("")
   const [isLoading, setIsLoading] = useState(true)
+  const [stats, setStats] = useState({ total: 0, pending: 0, shortlisted: 0 })
+  const [recentApps, setRecentApps] = useState([])
 
   useEffect(() => {
     const user = localStorage.getItem("user")
@@ -22,7 +24,22 @@ export default function Dashboard() {
       navigate("/login")
       return
     }
-    setIsLoading(false)
+
+    // Fetch applications
+    const token = localStorage.getItem("token")
+    fetch("/api/applications", { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => res.json())
+      .then((data) => {
+        const apps = data.applications || []
+        setStats({
+          total: apps.length,
+          pending: apps.filter((a) => a.status === "pending" || a.status === "reviewed").length,
+          shortlisted: apps.filter((a) => a.status === "shortlisted").length,
+        })
+        setRecentApps(apps.slice(0, 5))
+      })
+      .catch((err) => console.error(err))
+      .finally(() => setIsLoading(false))
   }, [navigate])
 
   if (isLoading) {
@@ -94,7 +111,7 @@ export default function Dashboard() {
                   <h3 className="text-gray-600 font-semibold">Total Applied</h3>
                   <span className="text-2xl">📁</span>
                 </div>
-                <p className="text-4xl font-bold text-gray-900 mb-2">3</p>
+                <p className="text-4xl font-bold text-gray-900 mb-2">{stats.total}</p>
                 <p className="text-gray-600 text-sm">Job applications submitted</p>
               </div>
 
@@ -104,7 +121,7 @@ export default function Dashboard() {
                   <h3 className="text-gray-600 font-semibold">Under Review</h3>
                   <span className="text-2xl">⏳</span>
                 </div>
-                <p className="text-4xl font-bold text-gray-900 mb-2">1</p>
+                <p className="text-4xl font-bold text-gray-900 mb-2">{stats.pending}</p>
                 <p className="text-gray-600 text-sm">Applications being reviewed</p>
               </div>
 
@@ -114,7 +131,7 @@ export default function Dashboard() {
                   <h3 className="text-gray-600 font-semibold">Interviewing</h3>
                   <span className="text-2xl">👥</span>
                 </div>
-                <p className="text-4xl font-bold text-gray-900 mb-2">1</p>
+                <p className="text-4xl font-bold text-gray-900 mb-2">{stats.shortlisted}</p>
                 <p className="text-gray-600 text-sm">Interview opportunities</p>
               </div>
             </div>

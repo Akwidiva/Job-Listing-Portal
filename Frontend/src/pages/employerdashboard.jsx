@@ -9,26 +9,52 @@ export default function EmployerDashboard() {
   const navigate = useNavigate()
   const [companyName, setCompanyName] = useState("")
   const [isLoading, setIsLoading] = useState(true)
+  const [stats, setStats] = useState({ jobs: 0, applications: 0, pending: 0, hired: 0 })
+  const [recentJobs, setRecentJobs] = useState([])
 
   useEffect(() => {
     const user = localStorage.getItem("user")
     if (!user) {
-      router.push("/login")
+      navigate("/login")
       return
     }
     try {
       const userData = JSON.parse(user)
-      if (userData.role !== "employer") {
-        router.push("/dashboard")
+      if (userData.userType !== "employer") {
+        navigate("/dashboard")
         return
       }
-      setCompanyName(userData.companyName || "Company")
+      setCompanyName(userData.name || "Company")
     } catch {
-      router.push("/login")
+      navigate("/login")
       return
     }
-    setIsLoading(false)
-  })
+
+    const token = localStorage.getItem("token")
+    // Fetch jobs posted by employer
+    fetch("/api/jobs", { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => res.json())
+      .then((data) => {
+        setRecentJobs((data.jobs || []).slice(0, 5))
+        setStats((s) => ({ ...s, jobs: data.total || 0 }))
+      })
+      .catch(console.error)
+
+    // Fetch applications for employer jobs
+    fetch("/api/applications", { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => res.json())
+      .then((data) => {
+        const apps = data.applications || []
+        setStats((s) => ({
+          ...s,
+          applications: apps.length,
+          pending: apps.filter((a) => a.status === "pending").length,
+          hired: apps.filter((a) => a.status === "hired").length,
+        }))
+      })
+      .catch(console.error)
+      .finally(() => setIsLoading(false))
+  }, [navigate])
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>
@@ -67,8 +93,8 @@ export default function EmployerDashboard() {
                   <h3 className="text-gray-600 font-semibold">Active Job Listings</h3>
                   <span className="text-2xl">📋</span>
                 </div>
-                <p className="text-4xl font-bold text-gray-900 mb-2">12</p>
-                <p className="text-green-600 text-sm">+2 from last month</p>
+                <p className="text-4xl font-bold text-gray-900 mb-2">{stats.jobs}</p>
+                <p className="text-green-600 text-sm">Posted jobs</p>
               </div>
 
               {/* Total Applications */}
@@ -77,8 +103,8 @@ export default function EmployerDashboard() {
                   <h3 className="text-gray-600 font-semibold">Total Applications</h3>
                   <span className="text-2xl">👥</span>
                 </div>
-                <p className="text-4xl font-bold text-gray-900 mb-2">48</p>
-                <p className="text-green-600 text-sm">+8 applications</p>
+                <p className="text-4xl font-bold text-gray-900 mb-2">{stats.applications}</p>
+                <p className="text-green-600 text-sm">Received applications</p>
               </div>
 
               {/* Pending Reviews */}
@@ -87,8 +113,8 @@ export default function EmployerDashboard() {
                   <h3 className="text-gray-600 font-semibold">Pending Reviews</h3>
                   <span className="text-2xl">⏳</span>
                 </div>
-                <p className="text-4xl font-bold text-gray-900 mb-2">15</p>
-                <p className="text-red-600 text-sm">-3 pending</p>
+                <p className="text-4xl font-bold text-gray-900 mb-2">{stats.pending}</p>
+                <p className="text-red-600 text-sm">To review</p>
               </div>
 
               {/* Hired Candidates */}
@@ -97,8 +123,8 @@ export default function EmployerDashboard() {
                   <h3 className="text-gray-600 font-semibold">Hired Candidates</h3>
                   <span className="text-2xl">✓</span>
                 </div>
-                <p className="text-4xl font-bold text-gray-900 mb-2">7</p>
-                <p className="text-green-600 text-sm">+1 hired</p>
+                <p className="text-4xl font-bold text-gray-900 mb-2">{stats.hired}</p>
+                <p className="text-green-600 text-sm">Hired</p>
               </div>
             </div>
 

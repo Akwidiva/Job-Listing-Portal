@@ -8,35 +8,7 @@ export default function AppliedJobs() {
   const navigate = useNavigate()
   const [userName, setUserName] = useState("")
   const [isLoading, setIsLoading] = useState(true)
-  const [appliedJobs, setAppliedJobs] = useState([
-    {
-      id: 1,
-      title: "Senior Full Stack Developer",
-      company: "TechCorp Inc.",
-      location: "San Francisco, CA",
-      appliedDate: "2024-01-15",
-      status: "Under Review",
-      salary: "$120,000 - $150,000"
-    },
-    {
-      id: 2,
-      title: "Frontend Developer",
-      company: "StartupXYZ",
-      location: "Remote",
-      appliedDate: "2024-01-10",
-      status: "Interview Scheduled",
-      salary: "$90,000 - $110,000"
-    },
-    {
-      id: 3,
-      title: "React Developer",
-      company: "InnovateLabs",
-      location: "New York, NY",
-      appliedDate: "2024-01-08",
-      status: "Rejected",
-      salary: "$100,000 - $130,000"
-    }
-  ])
+  const [appliedJobs, setAppliedJobs] = useState([])
 
   useEffect(() => {
     const user = localStorage.getItem("user")
@@ -51,7 +23,27 @@ export default function AppliedJobs() {
       navigate("/login")
       return
     }
-    setIsLoading(false)
+
+    // Fetch applications from API
+    const token = localStorage.getItem("token")
+    fetch("/api/applications", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const mapped = (data.applications || []).map((app) => ({
+          id: app._id,
+          title: app.job?.title || "Unknown",
+          company: app.job?.company || "",
+          location: app.job?.location || "",
+          appliedDate: new Date(app.createdAt).toISOString().split("T")[0],
+          status: app.status.charAt(0).toUpperCase() + app.status.slice(1),
+          salary: "",
+        }))
+        setAppliedJobs(mapped)
+      })
+      .catch((err) => console.error("Failed to fetch applications", err))
+      .finally(() => setIsLoading(false))
   }, [navigate])
 
   const getStatusColor = (status) => {

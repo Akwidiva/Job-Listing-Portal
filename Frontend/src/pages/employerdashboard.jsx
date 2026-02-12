@@ -78,7 +78,10 @@ export default function EmployerDashboard() {
                   Manage your job listings, applications, and recruitment activities
                 </p>
               </div>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors">
+              <button
+                onClick={() => navigate("/post-job")}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors"
+              >
                 + Post New Job
               </button>
             </div>

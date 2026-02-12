@@ -20,6 +20,8 @@ import EditCompanyProfile from './pages/EditCompanyProfile';
 import CompanyBranding from './pages/CompanyBranding';
 import Jobs from './pages/Jobs';
 import JobDetail from './pages/JobDetail';
+import PostJob from './pages/PostJob';
+import EmployerApplications from './pages/EmployerApplications';
 
 // Component that redirects to Google OAuth
 function GoogleRedirect() {
@@ -67,6 +69,8 @@ function App() {
           <Route path="/reset-password-page" element={<ResetPassword />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/jobs/:id" element={<JobDetail />} />
+          <Route path="/post-job" element={<PostJob />} />
+          <Route path="/employer-applications" element={<EmployerApplications />} />
         </Routes>
       </div>
     </Router>

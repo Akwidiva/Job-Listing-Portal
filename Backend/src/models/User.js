@@ -53,6 +53,14 @@ const userSchema = new mongoose.Schema({
     path: String,
     uploadedAt: { type: Date, default: Date.now }
   }],
+  // Employer-specific fields
+  companyName: { type: String, default: '' },
+  companyDescription: { type: String, default: '' },
+  industry: { type: String, default: '' },
+  companySize: { type: String, default: '' },
+  founded: { type: String, default: '' },
+  website: { type: String, default: '' },
+  brandColor: { type: String, default: '#1B82F6' },
   isVerified: {
     type: Boolean,
     default: false,

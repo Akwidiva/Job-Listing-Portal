@@ -15,6 +15,8 @@ import AppliedJobs from './pages/appliedjobs';
 import EmployerDashboard from './pages/employerdashboard';
 import JobListingsPage from './pages/JobListingsPage';
 import CreateJobListingPage from './pages/CreateJobListingPage';
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 
 // Component that redirects to Google OAuth
 function GoogleRedirect() {
@@ -44,6 +46,8 @@ function App() {
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/employer-dashboard" element={<EmployerDashboard />} />
           <Route path="/job-listings" element={<JobListingsPage />} />

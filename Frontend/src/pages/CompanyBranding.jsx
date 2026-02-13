@@ -8,6 +8,8 @@ export default function CompanyBranding() {
   const navigate = useNavigate()
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [message, setMessage] = useState("")
   const [brandData, setBrandData] = useState({
     primaryColor: "#1B82F6",
     secondaryColor: "#10B981",
@@ -16,22 +18,34 @@ export default function CompanyBranding() {
 
   useEffect(() => {
     const user = localStorage.getItem("user")
-    if (!user) {
+    const token = localStorage.getItem("token")
+    if (!user || !token) {
       navigate("/login")
       return
     }
 
     try {
       const userData = JSON.parse(user)
-      if (userData.role !== "employer") {
+      if (userData.userType !== "employer") {
         navigate("/dashboard")
         return
       }
       setIsAuthenticated(true)
+
+      // Fetch current brand color
+      fetch("/api/employer/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.profile?.brandColor) {
+            setBrandData((prev) => ({ ...prev, primaryColor: data.profile.brandColor }))
+          }
+        })
+        .catch((err) => console.error(err))
+        .finally(() => setLoading(false))
     } catch (e) {
       navigate("/login")
-    } finally {
-      setLoading(false)
     }
   }, [navigate])
 
@@ -42,8 +56,29 @@ export default function CompanyBranding() {
     }))
   }
 
-  const handleSaveBranding = () => {
-    alert("Branding settings saved successfully!")
+  const handleSaveBranding = async () => {
+    setSaving(true)
+    setMessage("")
+    const token = localStorage.getItem("token")
+    try {
+      const res = await fetch("/api/employer/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ brandColor: brandData.primaryColor }),
+      })
+      if (res.ok) {
+        setMessage("Branding saved successfully!")
+      } else {
+        setMessage("Failed to save branding.")
+      }
+    } catch (err) {
+      setMessage("Error saving branding.")
+    } finally {
+      setSaving(false)
+    }
   }
 
   if (loading) {
@@ -67,12 +102,19 @@ export default function CompanyBranding() {
                 Dashboard
               </Link>
               <span className="text-gray-400">/</span>
-              <Link to="/company-profile" className="text-gray-600 hover:text-blue-600">
+              <Link to="/employer-company-profile" className="text-gray-600 hover:text-blue-600">
                 Company Profile
               </Link>
               <span className="text-gray-400">/</span>
               <span className="text-gray-900 font-medium">Branding Settings</span>
             </div>
+
+            {/* Success/Error Message */}
+            {message && (
+              <div className={`mb-6 p-4 rounded-lg ${message.includes("success") ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                {message}
+              </div>
+            )}
 
             {/* Page Title */}
             <div className="mb-8">
@@ -212,14 +254,18 @@ export default function CompanyBranding() {
                 <div className="flex gap-4">
                   <button
                     onClick={handleSaveBranding}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
+                    disabled={saving}
+                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
                   >
                     <span>💾</span>
-                    Save Branding
+                    {saving ? "Saving..." : "Save Branding"}
                   </button>
-                  <button className="border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-2 rounded-lg font-medium transition-colors">
+                  <Link
+                    to="/employer-company-profile"
+                    className="border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-2 rounded-lg font-medium transition-colors"
+                  >
                     Cancel
-                  </button>
+                  </Link>
                 </div>
               </div>
 

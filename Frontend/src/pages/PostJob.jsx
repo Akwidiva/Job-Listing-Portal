@@ -13,7 +13,7 @@ export default function PostJob() {
     company: "",
     location: "",
     salaryRange: "",
-    type: "full-time",
+    type: "Full-time",
     description: "",
     qualifications: "",
     responsibilities: "",
@@ -149,10 +149,11 @@ export default function PostJob() {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="full-time">Full-time</option>
-                  <option value="part-time">Part-time</option>
-                  <option value="contract">Contract</option>
-                  <option value="internship">Internship</option>
+                  <option value="Full-time">Full-time</option>
+                  <option value="Part-time">Part-time</option>
+                  <option value="Contract">Contract</option>
+                  <option value="Internship">Internship</option>
+                  <option value="Remote">Remote</option>
                 </select>
               </div>
 

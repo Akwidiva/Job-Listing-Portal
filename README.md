@@ -188,6 +188,121 @@ After running `npm run seed`:
 
 ---
 
+## Hosting on Vercel
+
+### Option 1: Frontend on Vercel + Backend on Vercel (Recommended)
+
+#### Step 1: Set up MongoDB Atlas (Cloud Database)
+
+1. Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and create a free account
+2. Create a new cluster (free tier is fine)
+3. Click "Connect" → "Connect your application"
+4. Copy the connection string (looks like `mongodb+srv://user:password@cluster.xxxxx.mongodb.net/jobportal`)
+5. Add your IP to allowed list or allow access from anywhere (0.0.0.0/0)
+
+#### Step 2: Deploy Backend to Vercel
+
+1. Push your code to GitHub
+2. Go to [Vercel](https://vercel.com) and sign in with GitHub
+3. Click "Add New" → "Project"
+4. Import your GitHub repository
+5. Set the **Root Directory** to `Backend`
+6. Add **Environment Variables**:
+   ```
+   MONGO_URI=mongodb+srv://user:password@cluster.xxxxx.mongodb.net/jobportal
+   JWT_SECRET=your-secure-jwt-secret
+   SESSION_SECRET=your-secure-session-secret
+   FRONTEND_URL=https://your-frontend-app.vercel.app
+   ```
+7. Deploy — note your backend URL (e.g., `https://jlp-backend.vercel.app`)
+
+#### Step 3: Deploy Frontend to Vercel
+
+1. In Vercel, click "Add New" → "Project"
+2. Import the same repository
+3. Set the **Root Directory** to `Frontend`
+4. Add **Environment Variables**:
+   ```
+   REACT_APP_BACKEND_URL=https://jlp-backend.vercel.app
+   ```
+5. Deploy
+
+#### Step 4: Update Backend FRONTEND_URL
+
+1. Go to your backend project settings in Vercel
+2. Update `FRONTEND_URL` to your actual frontend URL
+3. Redeploy the backend
+
+### Option 2: Frontend on Vercel + Backend on Railway/Render
+
+If you prefer a traditional server for the backend:
+
+#### Railway (Recommended for backend)
+
+1. Go to [Railway](https://railway.app) and sign in with GitHub
+2. Click "New Project" → "Deploy from GitHub repo"
+3. Select your repo, set root directory to `Backend`
+4. Add environment variables (same as above)
+5. Railway auto-deploys and gives you a URL
+
+#### Render
+
+1. Go to [Render](https://render.com) and sign in
+2. Create a new "Web Service"
+3. Connect your GitHub repo, set root directory to `Backend`
+4. Build Command: `npm install`
+5. Start Command: `npm start`
+6. Add environment variables
+
+### Production Checklist
+
+- [ ] Use MongoDB Atlas (not local MongoDB)
+- [ ] Set secure JWT_SECRET and SESSION_SECRET (32+ random characters)
+- [ ] Update CORS origin in `Backend/index.js` to your frontend URL
+- [ ] Set `cookie.secure: true` in session config for HTTPS
+- [ ] Update Google OAuth callback URL in Google Cloud Console
+- [ ] Run `npm run build` in Frontend before deploying (Vercel does this automatically)
+
+### Environment Variables Reference
+
+**Backend (.env)**
+```env
+MONGO_URI=mongodb+srv://...
+JWT_SECRET=generate-a-secure-random-string
+SESSION_SECRET=another-secure-random-string
+FRONTEND_URL=https://your-frontend.vercel.app
+PORT=5000
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+```
+
+**Frontend (.env)**
+```env
+REACT_APP_BACKEND_URL=https://your-backend.vercel.app
+```
+
+---
+
 ## License
 
 MIT
+Route	Page	Description
+/	Landing Page	Home page with intro, CTA buttons
+/auth	Auth Page	Choose login/register method
+/login	Login	Email/password login form
+/register	Registration	New user signup
+/google	Google OAuth	Redirects to Google sign-in
+/forgot-password	Forgot Password	Request password reset email
+/reset-password/:token	Reset Password	Set new password
+/dashboard	Job Seeker Dashboard	Job seeker's home after login
+/employer-dashboard	Employer Dashboard	Employer's home after login
+/profile	Job Seeker Profile	View profile
+/profile-management	Profile Management	Edit profile & upload resume
+/profile-details	Profile Details	Detailed profile view
+/resume	Resume Management	Manage uploaded resumes
+/applied-jobs	Applied Jobs	Jobs you've applied to
+/jobs	Jobs List	Browse/search all jobs
+/jobs/:id	Job Detail	Single job view + Apply button
+/post-job	Post Job	Employer creates job listing
+/employer-applications	Applications	Employer manages candidates
+Want me to open one specific page to walk through its functionality?

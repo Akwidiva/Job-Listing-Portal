@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import Header from "../components/header"
 import Footer from "../components/footer"
-import EmployerSidebar from "../components/employersidebar"
+import JobSeekerSidebar from "../components/jobseekersidebar"
 
 export default function ProfileManagement() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -59,18 +59,20 @@ export default function ProfileManagement() {
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-white flex flex-col">
       <Header />
-      <main className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          {/* Breadcrumb */}
-          <div className="flex items-center gap-2 mb-6 text-sm">
-            <Link to="/dashboard" className="text-blue-600 hover:text-blue-700">
-              Dashboard
-            </Link>
-            <span className="text-gray-400">/</span>
-            <span className="text-gray-600">Profile Management</span>
-          </div>
+      <div className="flex flex-1">
+        <JobSeekerSidebar />
+        <main className="flex-1 bg-gray-50 overflow-auto">
+          <div className="max-w-5xl mx-auto px-4 py-8">
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-2 mb-6 text-sm">
+              <Link to="/dashboard" className="text-blue-600 hover:text-blue-700">
+                Dashboard
+              </Link>
+              <span className="text-gray-400">/</span>
+              <span className="text-gray-600">Profile Management</span>
+            </div>
 
           {/* Header Section */}
           <div className="mb-8">
@@ -285,10 +287,11 @@ export default function ProfileManagement() {
             >
               → View Full Profile
             </Link>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
       <Footer />
-    </>
+    </div>
   )
 }

@@ -34,10 +34,10 @@ export default function EmployerSidebar() {
         {/* Navigation Section */}
         <div className="mb-4">
           <p className="text-xs font-semibold text-gray-500 uppercase mb-2 px-2">Navigation</p>
-          <div className="space-y-1">
+          <div className="flex flex-col space-y-1">
             <Link
               to="/employer-dashboard"
-              className={`w-full text-left px-3 py-2 rounded text-xs font-medium transition-colors ${
+              className={`block w-full text-left px-3 py-2 rounded text-xs font-medium transition-colors ${
                 isActive("/employer-dashboard")
                   ? "bg-blue-100 text-blue-600"
                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
@@ -46,19 +46,19 @@ export default function EmployerSidebar() {
               📊 Dashboard
             </Link>
             <Link
-              to="/job-listings"
-              className={`w-full text-left px-3 py-2 rounded text-xs font-medium transition-colors ${
-                isActive("/job-listings")
+              to="/post-job"
+              className={`block w-full text-left px-3 py-2 rounded text-xs font-medium transition-colors ${
+                isActive("/post-job")
                   ? "bg-blue-100 text-blue-600"
                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               }`}
             >
-              📋 Job Listings
+              ➕ Post Job
             </Link>
             <Link
-              to="/applications"
-              className={`w-full text-left px-3 py-2 rounded text-xs font-medium transition-colors ${
-                isActive("/applications")
+              to="/employer-applications"
+              className={`block w-full text-left px-3 py-2 rounded text-xs font-medium transition-colors ${
+                isActive("/employer-applications")
                   ? "bg-blue-100 text-blue-600"
                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               }`}
@@ -66,9 +66,9 @@ export default function EmployerSidebar() {
               📧 Applications
             </Link>
             <Link
-              to="/company-profile"
-              className={`w-full text-left px-3 py-2 rounded text-xs font-medium transition-colors ${
-                isActive("/company-profile")
+              to="/employer-company-profile"
+              className={`block w-full text-left px-3 py-2 rounded text-xs font-medium transition-colors ${
+                isActive("/employer-company-profile")
                   ? "bg-blue-100 text-blue-600"
                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               }`}
@@ -80,16 +80,16 @@ export default function EmployerSidebar() {
 
         <div>
           <p className="text-xs font-semibold text-gray-500 uppercase mb-2 px-2">Account</p>
-          <div className="space-y-1">
+          <div className="flex flex-col space-y-1">
             <Link
-              href="/settings"
-              className="w-full text-left px-3 py-2 rounded text-xs font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+              to="/settings"
+              className="block w-full text-left px-3 py-2 rounded text-xs font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
             >
               ⚙️ Settings
             </Link>
             <Link
-              href="/help"
-              className="w-full text-left px-3 py-2 rounded text-xs font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+              to="/help"
+              className="block w-full text-left px-3 py-2 rounded text-xs font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
             >
               ❓ Help & Support
             </Link>

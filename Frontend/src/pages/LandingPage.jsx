@@ -1,8 +1,42 @@
 import { Search, MapPin, Clock, DollarSign, Users, Building2, Linkedin, Twitter, Facebook } from "lucide-react"
+import { useState, useEffect } from "react"
+import { useNavigate, Link } from "react-router-dom"
 import Header from "../components/header"
 import Footer from "../components/footer"
 
 function LandingPage() {
+  const navigate = useNavigate()
+  const [keyword, setKeyword] = useState("")
+  const [jobType, setJobType] = useState("")
+  const [location, setLocation] = useState("")
+  const [featuredJobs, setFeaturedJobs] = useState([])
+  const [loadingJobs, setLoadingJobs] = useState(true)
+
+  useEffect(() => {
+    // Fetch featured jobs from API
+    const fetchFeaturedJobs = async () => {
+      try {
+        const res = await fetch("/api/jobs?limit=6")
+        const data = await res.json()
+        setFeaturedJobs(data.jobs || [])
+      } catch (err) {
+        console.error("Failed to fetch featured jobs", err)
+      } finally {
+        setLoadingJobs(false)
+      }
+    }
+    fetchFeaturedJobs()
+  }, [])
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+    const params = new URLSearchParams()
+    if (keyword) params.set("keyword", keyword)
+    if (jobType) params.set("type", jobType)
+    if (location) params.set("location", location)
+    navigate(`/jobs?${params.toString()}`)
+  }
+
   return (
 
     <div className="min-h-screen bg-white">
@@ -19,40 +53,52 @@ function LandingPage() {
           </p>
 
           {/* Search Form */}
-          <div className="bg-white rounded-lg shadow-lg p-8 mb-12">
+          <form onSubmit={handleSearch} className="bg-white rounded-lg shadow-lg p-8 mb-12">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div className="text-left">
                 <label className="block text-sm font-semibold text-gray-900 mb-2">Job Title or Keyword</label>
                 <input
                   type="text"
                   placeholder="e.g. Software Engineer, Product Manager"
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                 />
               </div>
               <div className="text-left">
                 <label className="block text-sm font-semibold text-gray-900 mb-2">Job Type</label>
-                <select className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white">
-                  <option>All Types</option>
-                  <option>Full-time</option>
-                  <option>Part-time</option>
-                  <option>Contract</option>
+                <select 
+                  value={jobType}
+                  onChange={(e) => setJobType(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white"
+                >
+                  <option value="">All Types</option>
+                  <option value="Full-time">Full-time</option>
+                  <option value="Part-time">Part-time</option>
+                  <option value="Contract">Contract</option>
+                  <option value="Internship">Internship</option>
+                  <option value="Remote">Remote</option>
                 </select>
               </div>
               <div className="text-left">
                 <label className="block text-sm font-semibold text-gray-900 mb-2">Location</label>
-                <select className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white">
-                  <option>All Locations</option>
-                  <option>Remote</option>
-                  <option>New York</option>
-                  <option>San Francisco</option>
+                <select 
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white"
+                >
+                  <option value="">All Locations</option>
+                  <option value="Remote">Remote</option>
+                  <option value="New York">New York</option>
+                  <option value="San Francisco">San Francisco</option>
                 </select>
               </div>
             </div>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white w-full md:w-auto px-8 py-2">
+            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white w-full md:w-auto px-8 py-2 rounded-md flex items-center justify-center mx-auto">
               <Search className="w-4 h-4 mr-2" />
               Search Jobs
             </button>
-          </div>
+          </form>
 
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -83,63 +129,13 @@ function LandingPage() {
 
         {/* Job Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {[
-            {
-              company: "TechCorp Inc",
-              title: "Senior Software Engineer",
-              location: "San Francisco, CA",
-              type: "Full Time",
-              salary: "$150,000 - $200,000",
-              description: "We are looking for an experienced Senior Software Engineer to join our growing team.",
-              skills: ["React", "Node.js", "TypeScript"],
-            },
-            {
-              company: "InnovateLabs",
-              title: "Product Manager",
-              location: "New York, NY",
-              type: "Full Time",
-              salary: "$120,000 - $160,000",
-              description: "Lead product strategy and development for our flagship platform.",
-              skills: ["Product Strategy", "Analytics", "Leadership"],
-            },
-            {
-              company: "DesignStudio",
-              title: "UX/UI Designer",
-              location: "Remote",
-              type: "Full Time",
-              salary: "$90,000 - $130,000",
-              description: "Create beautiful and intuitive user experiences for web and mobile applications.",
-              skills: ["Figma", "UI Design", "User Research"],
-            },
-            {
-              company: "DataDriven Co",
-              title: "Data Scientist",
-              location: "Boston, MA",
-              type: "Full Time",
-              salary: "$130,000 - $180,000",
-              description: "Analyze complex datasets and build machine learning models to drive business insights.",
-              skills: ["Python", "Machine Learning", "SQL"],
-            },
-            {
-              company: "BrandBoost",
-              title: "Marketing Manager",
-              location: "Los Angeles, CA",
-              type: "Full Time",
-              salary: "$100,000 - $140,000",
-              description: "Develop and execute marketing strategies to grow our brand presence.",
-              skills: ["Digital Marketing", "Strategy", "Analytics"],
-            },
-            {
-              company: "CloudSystems",
-              title: "DevOps Engineer",
-              location: "Seattle, WA",
-              type: "Full Time",
-              salary: "$140,000 - $190,000",
-              description: "Build and maintain cloud infrastructure and deployment pipelines.",
-              skills: ["AWS", "Kubernetes", "CI/CD"],
-            },
-          ].map((job, i) => (
-            <div key={i} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+          {loadingJobs ? (
+            <p className="col-span-3 text-center text-gray-500">Loading jobs...</p>
+          ) : featuredJobs.length === 0 ? (
+            <p className="col-span-3 text-center text-gray-500">No jobs available yet.</p>
+          ) : (
+            featuredJobs.map((job) => (
+            <div key={job._id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
               {/* Card Header with Icon */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
@@ -157,20 +153,20 @@ function LandingPage() {
                 </div>
                 <div className="flex items-center text-gray-600 text-sm">
                   <Clock className="w-4 h-4 mr-2 text-gray-400" />
-                  {job.type}
+                  {job.type || "Full-time"}
                 </div>
                 <div className="flex items-center text-gray-600 text-sm">
                   <DollarSign className="w-4 h-4 mr-2 text-gray-400" />
-                  {job.salary}
+                  {job.salaryRange || "Competitive"}
                 </div>
               </div>
 
               {/* Job Description */}
-              <p className="text-gray-700 text-sm mb-4">{job.description}</p>
+              <p className="text-gray-700 text-sm mb-4 line-clamp-2">{job.description}</p>
 
               {/* Skills Tags */}
               <div className="flex flex-wrap gap-2 mb-6">
-                {job.skills.map((skill, idx) => (
+                {(job.qualifications || []).slice(0, 3).map((skill, idx) => (
                   <span key={idx} className="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
                     {skill}
                   </span>
@@ -179,17 +175,18 @@ function LandingPage() {
 
               {/* View Details Link */}
               <div className="text-center">
-                <a href="#" className="text-blue-600 font-medium text-sm hover:underline">
+                <Link to={`/jobs/${job._id}`} className="text-blue-600 font-medium text-sm hover:underline">
                   View Details
-                </a>
+                </Link>
               </div>
             </div>
-          ))}
+          ))
+          )}
         </div>
 
         {/* View All Jobs Button */}
         <div className="flex justify-center">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-12 py-2 font-semibold">View All Jobs →</button>
+          <Link to="/jobs" className="bg-blue-600 hover:bg-blue-700 text-white px-12 py-2 font-semibold rounded-md">View All Jobs →</Link>
         </div>
       </section>
 
@@ -207,15 +204,15 @@ function LandingPage() {
             <p className="text-gray-600 mb-8 leading-relaxed">
               Create your profile, upload your resume, and start applying to your dream jobs today.
             </p>
-            <a
-              href="/auth"
+            <Link
+              to="/register"
               className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-2 rounded-md font-semibold w-full mb-4 text-center transition-colors"
             >
               Get Started
-            </a>
-            <a href="#" className="text-blue-600 font-medium text-sm hover:underline">
+            </Link>
+            <Link to="/login" className="text-blue-600 font-medium text-sm hover:underline">
               Already have an account? Login
-            </a>
+            </Link>
           </div>
 
           {/* For Employers Card */}
@@ -229,15 +226,15 @@ function LandingPage() {
             <p className="text-gray-600 mb-8 leading-relaxed">
               Post job listings, manage applications, and find the perfect candidates for your team.
             </p>
-            <a
-              href="/auth"
+            <Link
+              to="/register"
               className="inline-block bg-green-600 hover:bg-green-700 text-white px-8 py-2 rounded-md font-semibold w-full mb-4 text-center transition-colors"
             >
               Post a Job
-            </a>
-            <a href="#" className="text-green-600 font-medium text-sm hover:underline">
+            </Link>
+            <Link to="/login" className="text-green-600 font-medium text-sm hover:underline">
               Employer Login
-            </a>
+            </Link>
           </div>
         </div>
       </section>

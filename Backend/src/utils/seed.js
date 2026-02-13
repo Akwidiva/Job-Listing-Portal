@@ -23,6 +23,14 @@ async function seed() {
       email: 'employer@example.com',
       password: passwordHash,
       userType: 'employer',
+      companyName: 'Acme Corporation',
+      companyDescription: 'Leading technology solutions provider specializing in cloud infrastructure, enterprise software development, and innovative digital solutions for businesses worldwide.',
+      industry: 'Technology',
+      companySize: '500-1000',
+      founded: '2010',
+      website: 'https://acmecorp.example.com',
+      location: '123 Tech Street, San Francisco, CA 94105',
+      brandColor: '#1B82F6',
     });
 
     const seeker = new User({

@@ -15,8 +15,7 @@ export default function Header() {
         const userData = JSON.parse(user)
         setIsAuthenticated(true)
         setUserName(userData.name || userData.email.split('@')[0] || "User")
-        const displayUserType = userData.userType === 'employer' ? 'Employer' : 'Job Seeker'
-        setUserType(displayUserType)
+        setUserType(userData.userType || 'job-seeker')
       } catch (e) {
         setIsAuthenticated(false)
       }
@@ -24,6 +23,8 @@ export default function Header() {
   }, [])
 
   if (!mounted) return null
+
+  const displayUserType = userType === 'employer' ? 'Employer' : 'Job Seeker'
 
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
@@ -38,15 +39,16 @@ export default function Header() {
 
         {/* Navigation Links */}
         <nav className="hidden md:flex items-center gap-8">
-          <Link to="/jobs" className="text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors">
-            Find Jobs
-          </Link>
-          <Link to="/employers" className="text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors">
-            For Employers
-          </Link>
-          <Link to="/about" className="text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors">
-            About
-          </Link>
+          {userType !== 'employer' && (
+            <Link to="/jobs" className="text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors">
+              Find Jobs
+            </Link>
+          )}
+          {userType === 'employer' && isAuthenticated && (
+            <Link to="/post-job" className="text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors">
+              Post a Job
+            </Link>
+          )}
         </nav>
 
         <div className="flex items-center gap-4">
@@ -57,7 +59,7 @@ export default function Header() {
               </div>
               <div className="hidden sm:flex flex-col">
                 <span className="text-gray-900 font-medium text-sm">{userName}</span>
-                <span className="text-gray-500 text-xs">{userType}</span>
+                <span className="text-gray-500 text-xs">{displayUserType}</span>
               </div>
               <button
                 onClick={() => {

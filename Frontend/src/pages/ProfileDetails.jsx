@@ -39,15 +39,17 @@ export default function ProfileDetails() {
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-white flex flex-col">
       <Header />
-      <main className="min-h-screen bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          {/* Breadcrumb */}
-          <div className="flex items-center gap-2 mb-6 text-sm">
-            <href to="/dashboard" className="text-blue-600 hover:text-blue-700">
-              Dashboard
-            </href>
+      <div className="flex flex-1">
+        <JobSeekerSidebar />
+        <main className="flex-1 bg-gray-50 overflow-auto">
+          <div className="max-w-4xl mx-auto px-4 py-8">
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-2 mb-6 text-sm">
+              <href to="/dashboard" className="text-blue-600 hover:text-blue-700">
+                Dashboard
+              </href>
             <span className="text-gray-400">/</span>
             <href to="/profile-management" className="text-blue-600 hover:text-blue-700">
               Profile Management
@@ -246,10 +248,11 @@ export default function ProfileDetails() {
             >
               Go to Dashboard →
             </href>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
       <Footer />
-    </>
+    </div>
   )
 }

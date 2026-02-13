@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import Header from '../components/header'
 import Footer from '../components/footer'
 import JobSeekerSidebar from "../components/jobseekersidebar"
@@ -73,7 +73,10 @@ export default function Dashboard() {
             {/* Quick Action Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
               {/* Search Jobs Card */}
-              <div className="bg-blue-600 text-white rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+              <div
+                className="bg-blue-600 text-white rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                onClick={() => navigate("/jobs")}
+              >
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-3xl">🔍</span>
                 </div>
@@ -94,7 +97,10 @@ export default function Dashboard() {
               </div>
 
               {/* Resume Management Card */}
-              <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+              <div
+                className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                onClick={() => navigate("/resume")}
+              >
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-3xl">📄</span>
                 </div>
@@ -143,9 +149,9 @@ export default function Dashboard() {
                   <h2 className="text-2xl font-bold text-gray-900">Recent Applications</h2>
                   <p className="text-gray-600 text-sm">Track the status of your job applications</p>
                 </div>
-                <a href="/applied-jobs" className="text-blue-600 font-semibold text-sm hover:underline">
+                <Link to="/applied-jobs" className="text-blue-600 font-semibold text-sm hover:underline">
                   View All →
-                </a>
+                </Link>
               </div>
 
               {/* Table */}
@@ -161,68 +167,47 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {/* Application Row 1 */}
-                    <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-4">
-                        <a href="#" className="text-blue-600 font-semibold hover:underline">
-                          Senior Backend Engineer (Node.js)
-                        </a>
-                      </td>
-                      <td className="py-4 px-4 text-gray-700">Tech Innovators Inc</td>
-                      <td className="py-4 px-4 text-gray-600 text-sm">Nov 21, 2025</td>
-                      <td className="py-4 px-4">
-                        <span className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
-                          ✓ Under Review
-                        </span>
-                      </td>
-                      <td className="py-4 px-4">
-                        <a href="#" className="text-blue-600 font-semibold text-sm hover:underline">
-                          View →
-                        </a>
-                      </td>
-                    </tr>
-
-                    {/* Application Row 2 */}
-                    <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-4">
-                        <a href="#" className="text-blue-600 font-semibold hover:underline">
-                          Data Scientist Internship
-                        </a>
-                      </td>
-                      <td className="py-4 px-4 text-gray-700">AI Frontier</td>
-                      <td className="py-4 px-4 text-gray-600 text-sm">Oct 5, 2025</td>
-                      <td className="py-4 px-4">
-                        <span className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold">
-                          📅 Interview Scheduled
-                        </span>
-                      </td>
-                      <td className="py-4 px-4">
-                        <a href="#" className="text-blue-600 font-semibold text-sm hover:underline">
-                          View →
-                        </a>
-                      </td>
-                    </tr>
-
-                    {/* Application Row 3 */}
-                    <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-4">
-                        <a href="#" className="text-blue-600 font-semibold hover:underline">
-                          Senior Full Stack Developer
-                        </a>
-                      </td>
-                      <td className="py-4 px-4 text-gray-700">Tech Innovators Inc</td>
-                      <td className="py-4 px-4 text-gray-600 text-sm">Sep 2, 2025</td>
-                      <td className="py-4 px-4">
-                        <span className="inline-flex items-center gap-2 bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold">
-                          ✕ Rejected
-                        </span>
-                      </td>
-                      <td className="py-4 px-4">
-                        <a href="#" className="text-blue-600 font-semibold text-sm hover:underline">
-                          View →
-                        </a>
-                      </td>
-                    </tr>
+                    {recentApps.length === 0 ? (
+                      <tr>
+                        <td colSpan="5" className="py-8 text-center text-gray-500">
+                          No applications yet. Start applying to jobs!
+                        </td>
+                      </tr>
+                    ) : (
+                      recentApps.map((app) => {
+                        const statusConfig = {
+                          pending: { bg: "bg-yellow-100", text: "text-yellow-700", icon: "⏳", label: "Pending" },
+                          reviewing: { bg: "bg-green-100", text: "text-green-700", icon: "✓", label: "Under Review" },
+                          shortlisted: { bg: "bg-blue-100", text: "text-blue-700", icon: "📅", label: "Shortlisted" },
+                          rejected: { bg: "bg-red-100", text: "text-red-700", icon: "✕", label: "Rejected" },
+                          hired: { bg: "bg-emerald-100", text: "text-emerald-700", icon: "🎉", label: "Hired" },
+                        };
+                        const status = statusConfig[app.status] || statusConfig.pending;
+                        return (
+                          <tr key={app._id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                            <td className="py-4 px-4">
+                              <a href={`/jobs/${app.job?._id}`} className="text-blue-600 font-semibold hover:underline">
+                                {app.job?.title || "Job Position"}
+                              </a>
+                            </td>
+                            <td className="py-4 px-4 text-gray-700">{app.job?.company || "Company"}</td>
+                            <td className="py-4 px-4 text-gray-600 text-sm">
+                              {new Date(app.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                            </td>
+                            <td className="py-4 px-4">
+                              <span className={`inline-flex items-center gap-2 ${status.bg} ${status.text} px-3 py-1 rounded-full text-xs font-semibold`}>
+                                {status.icon} {status.label}
+                              </span>
+                            </td>
+                            <td className="py-4 px-4">
+                              <a href={`/jobs/${app.job?._id}`} className="text-blue-600 font-semibold text-sm hover:underline">
+                                View →
+                              </a>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
                   </tbody>
                 </table>
               </div>

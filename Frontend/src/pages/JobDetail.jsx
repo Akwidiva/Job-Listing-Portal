@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Header from "../components/header";
 import Footer from "../components/footer";
+import JobSeekerSidebar from "../components/jobseekersidebar";
 
 export default function JobDetail() {
   const { id } = useParams();
@@ -10,6 +11,17 @@ export default function JobDetail() {
   const [loading, setLoading] = useState(true);
   const [applying, setApplying] = useState(false);
   const [applied, setApplied] = useState(false);
+  const [isJobSeeker, setIsJobSeeker] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      try {
+        const userData = JSON.parse(user);
+        setIsJobSeeker(userData.userType === "job-seeker");
+      } catch (e) {}
+    }
+  }, []);
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -54,68 +66,74 @@ export default function JobDetail() {
 
   if (loading) {
     return (
-      <>
+      <div className="min-h-screen bg-gray-50 flex flex-col">
         <Header />
-        <main className="min-h-screen flex items-center justify-center">
-          <p className="text-gray-600">Loading...</p>
-        </main>
+        <div className="flex flex-1">
+          {isJobSeeker && <JobSeekerSidebar />}
+          <main className="flex-1 flex items-center justify-center">
+            <p className="text-gray-600">Loading...</p>
+          </main>
+        </div>
         <Footer />
-      </>
+      </div>
     );
   }
 
   if (!job) return null;
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
-      <main className="min-h-screen bg-gray-50 py-10">
-        <div className="max-w-4xl mx-auto px-4">
-          <Link to="/jobs" className="text-blue-600 hover:underline mb-4 inline-block">
-            ← Back to Jobs
-          </Link>
-          <div className="bg-white rounded-lg border border-gray-200 p-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{job.title}</h1>
-            <p className="text-gray-600 text-lg">{job.company}</p>
-            <p className="text-gray-500 mt-1">{job.location}</p>
-            {job.salaryRange && <p className="text-green-600 mt-2 font-medium">{job.salaryRange}</p>}
+      <div className="flex flex-1">
+        {isJobSeeker && <JobSeekerSidebar />}
+        <main className="flex-1 py-10 overflow-auto">
+          <div className="max-w-4xl mx-auto px-4">
+            <Link to="/jobs" className="text-blue-600 hover:underline mb-4 inline-block">
+              ← Back to Jobs
+            </Link>
+            <div className="bg-white rounded-lg border border-gray-200 p-8">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{job.title}</h1>
+              <p className="text-gray-600 text-lg">{job.company}</p>
+              <p className="text-gray-500 mt-1">{job.location}</p>
+              {job.salaryRange && <p className="text-green-600 mt-2 font-medium">{job.salaryRange}</p>}
 
-            <h2 className="text-xl font-semibold mt-6 mb-2">Description</h2>
-            <p className="text-gray-700 whitespace-pre-line">{job.description}</p>
+              <h2 className="text-xl font-semibold mt-6 mb-2">Description</h2>
+              <p className="text-gray-700 whitespace-pre-line">{job.description}</p>
 
-            {job.qualifications?.length > 0 && (
-              <>
-                <h2 className="text-xl font-semibold mt-6 mb-2">Qualifications</h2>
-                <ul className="list-disc list-inside text-gray-700">
-                  {job.qualifications.map((q, i) => (
-                    <li key={i}>{q}</li>
-                  ))}
-                </ul>
-              </>
-            )}
+              {job.qualifications?.length > 0 && (
+                <>
+                  <h2 className="text-xl font-semibold mt-6 mb-2">Qualifications</h2>
+                  <ul className="list-disc list-inside text-gray-700">
+                    {job.qualifications.map((q, i) => (
+                      <li key={i}>{q}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
 
-            {job.responsibilities?.length > 0 && (
-              <>
-                <h2 className="text-xl font-semibold mt-6 mb-2">Responsibilities</h2>
-                <ul className="list-disc list-inside text-gray-700">
-                  {job.responsibilities.map((r, i) => (
-                    <li key={i}>{r}</li>
-                  ))}
-                </ul>
-              </>
-            )}
+              {job.responsibilities?.length > 0 && (
+                <>
+                  <h2 className="text-xl font-semibold mt-6 mb-2">Responsibilities</h2>
+                  <ul className="list-disc list-inside text-gray-700">
+                    {job.responsibilities.map((r, i) => (
+                      <li key={i}>{r}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
 
-            <button
-              onClick={handleApply}
-              disabled={applying || applied}
-              className="mt-8 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg disabled:opacity-50 transition-colors"
-            >
-              {applied ? "Applied!" : applying ? "Applying..." : "Apply Now"}
-            </button>
+              <button
+                onClick={handleApply}
+                disabled={applying || applied}
+                className="mt-8 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg disabled:opacity-50 transition-colors"
+              >
+                {applied ? "Applied!" : applying ? "Applying..." : "Apply Now"}
+              </button>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
       <Footer />
-    </>
+    </div>
   );
 }
